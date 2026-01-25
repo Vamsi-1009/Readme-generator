@@ -30,11 +30,59 @@ body {
     animation: gradientBG 15s ease infinite;
 }
 
+/* Theme: Modern Dark for the Preview */
+.theme-dark {
+    background: #0d1117 !important;
+    color: #c9d1d9 !important;
+}
+.theme-dark h1, .theme-dark h2 {
+    color: #58a6ff !important;
+    border-bottom: 1px solid #30363d !important;
+}
+
+/* GitHub Dark Mode Theme for Preview Only */
+.theme-dark {
+    background-color: #0d1117 !important;
+    color: #c9d1d9 !important;
+}
+
+.theme-dark h1, .theme-dark h2 {
+    color: #58a6ff !important;
+    border-bottom-color: #30363d !important;
+}
+
+.theme-dark pre {
+    background-color: #161b22 !important;
+    border: 1px solid #30363d !important;
+}
+
+.theme-dark code {
+    background-color: rgba(110, 118, 129, 0.4) !important;
+    color: #c9d1d9 !important;
+}
+
+/* Theme: Elegant Blue */
+.theme-modern {
+    background: #f0f4ff !important;
+    border-left: 10px solid #6366f1 !important;
+}
+
 @keyframes gradientBG {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+
+@media print {
+    .bg-animation { display: none; } /* Don't waste ink on the background */
+    .glass-panel { 
+        box-shadow: none; 
+        border: none;
+        background: white;
+    }
+    #preview { padding: 0; }
+}
+
 
 /* 2. Main Wrapper */
 .main-wrapper {

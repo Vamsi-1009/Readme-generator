@@ -22,9 +22,9 @@
                 <div class="form-group magic-input">
                     <label>Tell me about your project</label>
                     <textarea id="magicText" 
-                        placeholder="e.g., I built a food delivery app with React and Firebase that handles real-time orders." 
+                        placeholder="e.g., I built a book exchange platform for students to sell and trade literary resources online." 
                         oninput="updatePreview()"></textarea>
-                    <small>Type any project idea and watch the grammar fix itself below!</small>
+                    <small>Input a single sentence to generate a full professional document.</small>
                 </div>
 
                 <div class="form-group">
@@ -34,6 +34,33 @@
                         <option value="Apache 2.0">Apache 2.0</option>
                         <option value="GPL v3">GPL v3</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>🌙 Preview Mode</label>
+                    <button onclick="toggleDarkMode()" class="btn-md" style="background: var(--dark);">Toggle Dark/Light Preview</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>📂 GitHub Auto-Import (Optional)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="repoUrl" placeholder="https://github.com/user/repo">
+                        <button onclick="importGitHubRepo()" style="width: auto; padding: 10px 20px;">Import</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>🤖 Writing Tone</label>
+                    <select id="projectTone" onchange="updatePreview()">
+                        <option value="startup">Startup (Energetic & Modern)</option>
+                        <option value="academic">Academic (Formal & Detailed)</option>
+                        <option value="minimalist">Minimalist (Short & Sharp)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>🖼️ Add Social Badges</label>
+                    <input type="text" id="githubUser" placeholder="Your GitHub Username" oninput="updatePreview()">
                 </div>
 
                 <div class="form-group">
@@ -48,6 +75,8 @@
                     <button onclick="downloadReadme()" class="btn-md hover-glow">Download .md</button>
                     <button onclick="exportPDF()" class="btn-pdf hover-glow">Export PDF</button>
                     <button onclick="copyToClipboard()" class="btn-copy hover-glow">Copy Markdown</button>
+                    <button onclick="copyHTML()" style="background: #6366f1; grid-column: span 1;">Copy HTML</button>
+                    <button onclick="resetApp()" style="background: #64748b; grid-column: span 1;">Reset All</button>
                 </div>
             </section>
     

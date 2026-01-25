@@ -3,77 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto README Generator</title>
+    <title>Auto README Generator | Magic Mode</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+    <div class="bg-animation"></div> 
 
-    <header>
-        <h1>🚀 Auto README Generator</h1>
-        <p>Fill in the details to generate a professional README.md</p>
-    </header>
+    <div class="main-wrapper">
+        <header class="fade-in">
+            <h1>🚀 Auto README Generator</h1>
+            <p>One sentence. One click. One professional README.</p>
+        </header>
+    
+        <div class="container">
+            <section class="editor glass-panel slide-up">
+                <div class="form-group magic-input">
+                    <label>Tell me about your project</label>
+                    <textarea id="magicText" 
+                        placeholder="e.g., I built a food delivery app with React and Firebase that handles real-time orders." 
+                        oninput="updatePreview()"></textarea>
+                    <small>Type any project idea and watch the grammar fix itself below!</small>
+                </div>
 
-    <div class="container">
-        <section class="editor">
-            <div class="form-group">
-                <label>Choose Template</label>
-                <select id="templateChoice" onchange="updatePreview()">
-                    <option value="pro">Professional (Recommended)</option>
-                    <option value="basic">Minimalist</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>License Type</label>
+                    <select id="license" onchange="updatePreview()">
+                        <option value="MIT">MIT License</option>
+                        <option value="Apache 2.0">Apache 2.0</option>
+                        <option value="GPL v3">GPL v3</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Project Title</label>
-                <input type="text" id="title" placeholder="e.g. My Awesome App" oninput="updatePreview()">
-            </div>
-
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="description" placeholder="What does this project do?" oninput="updatePreview()"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Features (One per line)</label>
-                <textarea id="features" placeholder="User Authentication&#10;Dark Mode&#10;API Integration" oninput="updatePreview()"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Tech Stack (Comma separated)</label>
-                <input type="text" id="tech" placeholder="React, Node.js, Firebase" oninput="updatePreview()">
-            </div>
-
-            <div class="form-group">
-                <label>Installation Commands</label>
-                <input type="text" id="install" placeholder="npm install" oninput="updatePreview()">
-            </div>
-
-            <div class="form-group">
-                <label>License</label>
-                <select id="license" onchange="updatePreview()">
-                    <option value="MIT">MIT</option>
-                    <option value="Apache 2.0">Apache 2.0</option>
-                    <option value="GPL v3">GPL v3</option>
-                </select>
-            </div>
-
-            <div class="button-group">
-                <button onclick="downloadReadme()" class="btn-md">Download .md</button>
-                <button onclick="exportPDF()" class="btn-pdf">Export PDF</button>
-                <button onclick="copyToClipboard()" class="btn-copy">Copy to Clipboard</button>
-            </div>
-        </section>
-
-        <section class="preview-container">
-            <div class="preview-header">
-                <span>Live Preview</span>
-            </div>
-            <div id="preview"></div>
-        </section>
+                <div class="form-group">
+                    <label>Template Style</label>
+                    <select id="templateChoice" onchange="updatePreview()">
+                        <option value="pro">Professional Expansion</option>
+                        <option value="basic">Simple & Clean</option>
+                    </select>
+                </div>
+    
+                <div class="button-group">
+                    <button onclick="downloadReadme()" class="btn-md hover-glow">Download .md</button>
+                    <button onclick="exportPDF()" class="btn-pdf hover-glow">Export PDF</button>
+                    <button onclick="copyToClipboard()" class="btn-copy hover-glow">Copy Markdown</button>
+                </div>
+            </section>
+    
+            <section class="preview-container glass-panel slide-up delay-1">
+                <div class="preview-header">
+                    <span>✨ Live Professional Output</span>
+                </div>
+                <div id="preview"></div>
+            </section>
+        </div>
     </div>
-
+   
     <script src="script.js"></script>
 </body>
 </html>

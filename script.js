@@ -1,76 +1,112 @@
-// Function to update the preview in real-time
+// 1. Universal Grammar & Sentence Refiner
+function refineSentence(text) {
+    if (!text) return "";
+    let s = text.trim();
+    
+    // Auto-capitalize and fix basic "i" grammar
+    s = s.charAt(0).toUpperCase() + s.slice(1);
+    s = s.replace(/\bi\b/g, "I");
+    
+    // Replace informal phrases with professional documentation standards
+    const polish = {
+        "the project is for": "This platform facilitates",
+        "to exchange": "the seamless exchange of",
+        "by selling": "through a peer-to-peer marketplace for",
+        "books on online": "literary resources via a digital interface",
+        "different types of": "diverse categories of",
+        "i made": "Architected",
+        "it has": "Features include"
+    };
+
+    Object.keys(polish).forEach(key => {
+        const regex = new RegExp(key, 'gi');
+        s = s.replace(regex, polish[key]);
+    });
+
+    if (!s.endsWith('.')) s += ".";
+    return s;
+}
+
+// 2. The Final Magic Engine
 function updatePreview() {
-    const title = document.getElementById('title').value || 'Project Title';
-    const desc = document.getElementById('description').value || 'Provide a project description...';
-    const features = document.getElementById('features').value;
-    const tech = document.getElementById('tech').value;
-    const install = document.getElementById('install').value || 'npm install';
+    const rawInput = document.getElementById('magicText').value; // Matches the textarea ID in index.html
     const license = document.getElementById('license').value;
     const template = document.getElementById('templateChoice').value;
 
-    let markdown = "";
+    if (!rawInput) {
+        document.getElementById('preview').innerHTML = "<p style='color: #64748b;'>Waiting for your project idea...</p>";
+        return;
+    }
 
-    if (template === "basic") {
-        markdown = `# ${title}\n\n## Description\n${desc}\n\n## Installation\n\`\`\`bash\n${install}\n\`\`\`\n\n## License\n${license}`;
-    } else {
-        // Professional Template
-        const featureList = features ? features.split('\n').map(f => `* ${f}`).join('\n') : '* Feature 1\n* Feature 2';
-        const techList = tech ? tech.split(',').map(t => `\n- ${t.trim()}`).join('') : 'List of technologies';
+    // Process the single text input
+    const refinedDesc = refineSentence(rawInput);
+    const projectTitle = rawInput.split(' ').slice(0, 3).join(' ').toUpperCase();
 
-        markdown = `# ${title}
-![License](https://img.shields.io/badge/license-${license.replace(/ /g, "%20")}-blue)
+    // Generate full content even from one sentence
+    const markdown = `# ${projectTitle || 'PROJECT PREVIEW'}
+![License](https://img.shields.io/badge/license-${license.replace(/ /g, "%20")}-blue?style=for-the-badge)
 
-## 📖 Description
-${desc}
+## 📖 Overview
+${refinedDesc} This solution is engineered to enhance user accessibility and streamline community-driven resource sharing.
 
-## ✨ Features
-${featureList}
+## ✨ Key Features
+* **Intuitive Marketplace:** Optimized for easy discovery and listing of items.
+* **Secure Exchange Protocols:** Ensuring safe transactions between verified users.
+* **Categorized Database:** Organized by institution, department, and resource type.
+* **Responsive Modern UI:** Seamless experience across all mobile and desktop devices.
 
-## 🛠️ Tech Stack
-${techList}
+## 🛠️ Technology Stack
+* **Frontend:** Modern JavaScript Framework (React/Vue)
+* **Styling:** Advanced CSS Logic / Tailwind
+* **Backend:** Scalable Cloud Architecture
+* **Deployment:** CI/CD via GitHub Actions
 
-## 🚀 Installation
-To get started, run:
+## 🚀 Installation & Usage
+To initialize the project environment locally:
 \`\`\`bash
-${install}
+# Clone the repository
+git clone https://github.com/user/${projectTitle.toLowerCase().replace(/ /g, "-")}.git
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 \`\`\`
 
 ## 📜 License
-This project is licensed under the ${license} License.
+This software is distributed under the ${license} License.
 `;
-    }
 
-    // Convert Markdown to HTML
+    // Render to the preview div
     document.getElementById('preview').innerHTML = marked.parse(markdown);
-    
-    // Global variable to store the raw markdown for downloading
     window.currentMarkdown = markdown;
 }
 
-// Download as README.md
+// 3. Essential Export Functions
 function downloadReadme() {
+    if (!window.currentMarkdown) return alert("Please type something first!");
     const blob = new Blob([window.currentMarkdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'README.md';
     a.click();
-    URL.revokeObjectURL(url);
 }
 
-// Copy to Clipboard
 function copyToClipboard() {
     navigator.clipboard.writeText(window.currentMarkdown).then(() => {
-        alert("Markdown copied to clipboard!");
+        const btn = document.querySelector('.btn-copy');
+        btn.innerText = "✅ Copied!";
+        setTimeout(() => { btn.innerText = "Copy Markdown"; }, 2000);
     });
 }
 
-// Export as PDF
 function exportPDF() {
     const element = document.getElementById('preview');
     const opt = {
         margin: 0.5,
-        filename: 'README.pdf',
+        filename: 'Documentation.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -78,5 +114,5 @@ function exportPDF() {
     html2pdf().set(opt).from(element).save();
 }
 
-// Initialize preview on load
-updatePreview();
+// Load default state
+window.onload = updatePreview;

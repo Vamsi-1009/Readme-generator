@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto README Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>🚀 Auto README Generator</h1>
+        <p>Fill in the details to generate a professional README.md</p>
+    </header>
+
+    <div class="container">
+        <section class="editor">
+            <div class="form-group">
+                <label>Choose Template</label>
+                <select id="templateChoice" onchange="updatePreview()">
+                    <option value="pro">Professional (Recommended)</option>
+                    <option value="basic">Minimalist</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" id="title" placeholder="e.g. My Awesome App" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="What does this project do?" oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Features (One per line)</label>
+                <textarea id="features" placeholder="User Authentication&#10;Dark Mode&#10;API Integration" oninput="updatePreview()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Tech Stack (Comma separated)</label>
+                <input type="text" id="tech" placeholder="React, Node.js, Firebase" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Installation Commands</label>
+                <input type="text" id="install" placeholder="npm install" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>License</label>
+                <select id="license" onchange="updatePreview()">
+                    <option value="MIT">MIT</option>
+                    <option value="Apache 2.0">Apache 2.0</option>
+                    <option value="GPL v3">GPL v3</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button onclick="downloadReadme()" class="btn-md">Download .md</button>
+                <button onclick="exportPDF()" class="btn-pdf">Export PDF</button>
+                <button onclick="copyToClipboard()" class="btn-copy">Copy to Clipboard</button>
+            </div>
+        </section>
+
+        <section class="preview-container">
+            <div class="preview-header">
+                <span>Live Preview</span>
+            </div>
+            <div id="preview"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

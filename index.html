@@ -3,92 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto README Generator | Magic Mode</title>
+    <title>Auto README | Futuristic Edition</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linuxenko/html-to-docx@master/dist/html-to-docx.js"></script>
 </head>
 <body>
-    <div class="bg-animation"></div> 
+    <div id="particles-js" class="bg-animation"></div>
 
     <div class="main-wrapper">
-        <header class="fade-in">
-            <h1>🚀 Auto README Generator</h1>
+        <header>
+            <h1>🚀 Auto README</h1>
             <p>One sentence. One click. One professional README.</p>
         </header>
-    
+
         <div class="container">
             <section class="editor glass-panel slide-up">
-                <div class="form-group magic-input">
-                    <label>Tell me about your project</label>
-                    <textarea id="magicText" 
-                        placeholder="e.g., I built a book exchange platform for students to sell and trade literary resources online." 
-                        oninput="updatePreview()"></textarea>
-                    <small>Input a single sentence to generate a full professional document.</small>
+                <div class="tab-system">
+                    <button class="tab-btn active" onclick="switchTab('wizard')">🧙‍♂️ WIZARD</button>
+                    <button class="tab-btn" onclick="switchTab('editor')">📝 EDITOR</button>
                 </div>
 
-                <div class="form-group">
-                    <label>License Type</label>
-                    <select id="license" onchange="updatePreview()">
-                        <option value="MIT">MIT License</option>
-                        <option value="Apache 2.0">Apache 2.0</option>
-                        <option value="GPL v3">GPL v3</option>
-                    </select>
-                </div>
+                <div id="wizard-view" class="tab-content active">
+                    <div class="form-group project-source">
+                        <label>🚀 PROJECT SOURCE</label>
+                        <div class="import-box">
+                            <input type="text" id="repoUrl" placeholder="user/repo">
+                            <button class="btn-import" onclick="importGitHubRepo()">Import</button>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>🌙 Preview Mode</label>
-                    <button onclick="toggleDarkMode()" class="btn-md" style="background: var(--dark);">Toggle Dark/Light Preview</button>
-                </div>
-                
-                <div class="form-group">
-                    <label>📂 GitHub Auto-Import (Optional)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="repoUrl" placeholder="https://github.com/user/repo">
-                        <button onclick="importGitHubRepo()" style="width: auto; padding: 10px 20px;">Import</button>
+                    <div class="form-group">
+                        <label>PROJECT DESCRIPTION</label>
+                        <textarea id="magicText" placeholder="E.g., A real-time chat application using WebSocket..." oninput="updatePreview()"></textarea>
+                        <button class="btn-ai" onclick="updatePreview()">✨ AI ENHANCE</button>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>🤖 Writing Tone</label>
-                    <select id="projectTone" onchange="updatePreview()">
-                        <option value="startup">Startup (Energetic & Modern)</option>
-                        <option value="academic">Academic (Formal & Detailed)</option>
-                        <option value="minimalist">Minimalist (Short & Sharp)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>🖼️ Add Social Badges</label>
-                    <input type="text" id="githubUser" placeholder="Your GitHub Username" oninput="updatePreview()">
+
+                <div id="editor-view" class="tab-content">
+                    <div class="form-group">
+                        <label>LICENSE TYPE</label>
+                        <select id="license" onchange="updatePreview()">
+                            <option value="MIT">MIT License</option>
+                            <option value="Apache 2.0">Apache 2.0</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>WRITING TONE</label>
+                        <select id="projectTone" onchange="updatePreview()">
+                            <option value="startup">Startup Tone</option>
+                            <option value="academic">Academic Tone</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Template Style</label>
-                    <select id="templateChoice" onchange="updatePreview()">
-                        <option value="pro">Professional Expansion</option>
-                        <option value="basic">Simple & Clean</option>
-                    </select>
-                </div>
-    
-                <div class="button-group">
-                    <button onclick="downloadReadme()" class="btn-md hover-glow">Download .md</button>
-                    <button onclick="exportPDF()" class="btn-pdf hover-glow">Export PDF</button>
-                    <button onclick="copyToClipboard()" class="btn-copy hover-glow">Copy Markdown</button>
-                    <button onclick="copyHTML()" style="background: #6366f1; grid-column: span 1;">Copy HTML</button>
-                    <button onclick="resetApp()" style="background: #64748b; grid-column: span 1;">Reset All</button>
+                <div class="button-grid">
+                    <button onclick="downloadReadme()" class="btn-primary">Download .md</button>
+                    <button onclick="exportPDF()" class="btn-danger">Export PDF</button>
+                    <button onclick="copyToClipboard()" class="btn-secondary">Copy MD</button>
+                    <button onclick="exportDOC()" class="btn-muted" style="background: #F0F0F0;">Export DOC</button>
+                    <button onclick="resetApp()" class="btn-muted">Reset</button>
                 </div>
             </section>
-    
-            <section class="preview-container glass-panel slide-up delay-1">
+
+            <section class="preview-container glass-panel slide-up">
                 <div class="preview-header">
-                    <span>✨ Live Professional Output</span>
+                    <span>✨ Preview</span>
+                    <button class="toggle-light" onclick="toggleDarkMode()">☀️ LIGHT</button>
                 </div>
-                <div id="preview"></div>
+                <div id="preview" class="theme-dark">
+                    <div class="placeholder">Waiting for your project idea...</div>
+                </div>
             </section>
         </div>
     </div>
-   
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,160 +1,39 @@
-:root {
-    --primary: #6366f1;
-    --accent: #00f2fe;
-    --danger: #ff4b5c;
-    --glass: rgba(255, 255, 255, 0.05);
-    --neon-border: rgba(0, 242, 254, 0.3);
-    --btn-spacing: 24px; /* Increased button gap */
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+/* Glassmorphism Effect */
+.glass-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
 }
 
-body {
-    margin: 0;
-    background: #0b0e14;
-    font-family: 'Inter', sans-serif;
-    color: #fff;
-    overflow-x: hidden;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bg-animation {
+/* Background Blobs */
+.blob-container {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: radial-gradient(circle at center, #1e293b 0%, #0b0e14 100%);
-    z-index: -1;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; overflow: hidden;
+    filter: blur(80px);
 }
 
-/* 1. MAXIMUM SIZE CONTAINER */
-.container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Ensures absolute 50/50 split */
-    gap: 50px; /* Wider gap for a more expansive feel */
-    width: 98%; /* Uses almost the full screen width */
-    max-width: 1800px; /* Increased significantly for ultra-wide displays */
-    min-height: 90vh; /* Takes up most of the screen height */
-    align-items: stretch; /* Forces equal height for both panels */
-    padding: 20px;
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.4;
 }
 
-/* 2. MATCHING GIANT PANELS */
-.glass-panel, .preview-container {
-    background: var(--glass);
-    backdrop-filter: blur(30px);
-    border: 1px solid var(--neon-border);
-    border-radius: 40px; /* Larger radius for larger boxes */
-    padding: 45px; /* More internal breathing room */
-    box-shadow: 0 0 60px rgba(0, 242, 254, 0.15);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    transition: all 0.4s ease;
+.blob-1 { width: 500px; height: 500px; background: #4f46e5; top: -10%; left: -10%; animation: float 20s infinite alternate; }
+.blob-2 { width: 400px; height: 400px; background: #7c3aed; bottom: -5%; right: 10%; animation: float 15s infinite alternate-reverse; }
+.blob-3 { width: 300px; height: 300px; background: #0891b2; top: 40%; left: 40%; animation: float 25s infinite linear; }
+
+@keyframes float {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(100px, 50px) scale(1.1); }
 }
 
-/* 3. CENTERED CURVATURE */
-.glass-panel {
-    transform: perspective(1500px) rotateY(-3deg); /* Slightly more aggressive tilt */
-}
-
-.preview-container {
-    transform: perspective(1500px) rotateY(3deg); /* Mirrored right-side tilt */
-}
-
-/* Tab System Scaling */
-.tab-system {
-    display: flex;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    margin-bottom: 35px;
-    padding: 8px;
-    gap: 12px;
-}
-
-.tab-btn {
-    flex: 1; 
-    padding: 18px; 
-    border: none; 
-    background: transparent; 
-    color: #94a3b8; 
-    cursor: pointer; 
-    transition: all 0.3s ease; 
-    border-radius: 14px;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.tab-btn.active { background: #fff; color: #000; font-weight: 800; }
-
-/* Input Spacing */
-.form-group { margin-bottom: 30px; }
-
-label {
-    display: block; 
-    margin-bottom: 15px; 
-    font-size: 0.85rem;
-    letter-spacing: 1.5px; 
-    font-weight: 800; 
-    color: var(--accent); 
-    text-transform: uppercase;
-}
-
-textarea, input {
-    width: 100%; 
-    background: rgba(255,255,255,0.05); 
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px; 
-    padding: 18px; 
-    color: white; 
-    font-size: 1.05rem; 
-    box-sizing: border-box;
-}
-
-/* Action Grid */
-.button-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: var(--btn-spacing);
-    margin-top: auto; 
-    padding-top: 30px;
-}
-
-/* If you want the Reset button to span the full width at the bottom */
-.btn-muted:last-child {
-    grid-column: span 2;
-    background: #334155;
-}
-
-button { 
-    padding: 20px; 
-    font-size: 1rem;
-    border-radius: 18px;
-    font-weight: 800;
-}
-
-/* 4. PREVIEW AREA OPTIMIZATION */
-#preview {
-    flex-grow: 1;
-    background: #0d1117; 
-    color: #c9d1d9; 
-    padding: 50px; /* Large internal padding for elite look */
-    border-radius: 25px;
-    border: 1px solid #30363d;
-    line-height: 1.8;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-y: auto;
-    font-size: 1.1rem;
-}
-
-.preview-header {
-    margin-bottom: 25px;
-    font-size: 1.2rem;
-}
-
-/* Responsive Fix */
-@media (max-width: 1300px) {
-    .container { grid-template-columns: 1fr; gap: 30px; }
-    .glass-panel, .preview-container { transform: none; width: 100%; }
-}
+/* Markdown Styling for Preview */
+#previewArea h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: #fff; }
+#previewArea h2 { font-size: 1.5rem; border-bottom: 1px solid #334155; padding-bottom: 0.5rem; margin-top: 1.5rem; color: #22d3ee; }
+#previewArea ul { list-style: disc; margin-left: 1.5rem; }

@@ -3,81 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto README | Futuristic Edition</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Auto README Generator | Ultra Modern</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/linuxenko/html-to-docx@master/dist/html-to-docx.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div id="particles-js" class="bg-animation"></div>
+<body class="bg-slate-950 text-white overflow-hidden font-['Plus_Jakarta_Sans']">
 
-    <div class="main-wrapper">
-        <header>
-            <h1>🚀 Auto README</h1>
-            <p>One sentence. One click. One professional README.</p>
+    <div class="blob-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="relative z-10 h-screen w-full flex flex-col p-6 lg:p-10 gap-6">
+        
+        <header class="flex justify-between items-center header-anim">
+            <div>
+                <h1 class="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+                    Auto README
+                </h1>
+                <p class="text-slate-400 text-sm">Elevate your documentation instantly.</p>
+            </div>
+            <div class="flex gap-4">
+                <button id="resetBtn" class="px-4 py-2 rounded-full border border-slate-700 hover:bg-slate-800 transition">Reset</button>
+                <button id="exportBtn" class="px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 font-bold hover:scale-105 transition shadow-[0_0_20px_rgba(147,51,234,0.4)]">Export .MD</button>
+            </div>
         </header>
 
-        <div class="container">
-            <section class="editor glass-panel slide-up">
-                <div class="tab-system">
-                    <button class="tab-btn active" onclick="switchTab('wizard')">🧙‍♂️ WIZARD</button>
-                    <button class="tab-btn" onclick="switchTab('editor')">📝 EDITOR</button>
-                </div>
-
-                <div id="wizard-view" class="tab-content active">
-                    <div class="form-group project-source">
-                        <label>🚀 PROJECT SOURCE</label>
-                        <div class="import-box">
-                            <input type="text" id="repoUrl" placeholder="user/repo">
-                            <button class="btn-import" onclick="importGitHubRepo()">Import</button>
-                        </div>
+        <section class="flex-1 flex gap-6 overflow-hidden">
+            <div class="w-full lg:w-5/12 glass-card p-8 overflow-y-auto side-pane-left">
+                <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                    Project Details
+                </h2>
+                
+                <div class="space-y-6" id="readmeForm">
+                    <div class="input-group">
+                        <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Project Title</label>
+                        <input type="text" id="pTitle" placeholder="e.g. My Awesome App" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 focus:border-cyan-500 focus:outline-none transition">
                     </div>
 
-                    <div class="form-group">
-                        <label>PROJECT DESCRIPTION</label>
-                        <textarea id="magicText" placeholder="E.g., A real-time chat application using WebSocket..." oninput="updatePreview()"></textarea>
-                        <button class="btn-ai" onclick="updatePreview()">✨ AI ENHANCE</button>
+                    <div class="input-group">
+                        <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Description</label>
+                        <textarea id="pDesc" rows="4" placeholder="What does this project do?" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 focus:border-cyan-500 focus:outline-none transition"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Tech Stack (Comma separated)</label>
+                        <input type="text" id="pTech" placeholder="React, Node.js, Tailwind" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl p-3 focus:border-cyan-500 focus:outline-none transition">
                     </div>
                 </div>
+            </div>
 
-                <div id="editor-view" class="tab-content">
-                    <div class="form-group">
-                        <label>LICENSE TYPE</label>
-                        <select id="license" onchange="updatePreview()">
-                            <option value="MIT">MIT License</option>
-                            <option value="Apache 2.0">Apache 2.0</option>
-                        </select>
+            <div class="hidden lg:flex flex-1 glass-card p-0 overflow-hidden side-pane-right relative">
+                <div class="absolute top-0 w-full bg-slate-800/50 px-6 py-2 text-xs text-slate-400 flex justify-between">
+                    <span>LIVE PREVIEW</span>
+                    <span id="charCount">0 characters</span>
+                </div>
+                <div id="previewArea" class="prose prose-invert max-w-none p-10 mt-6 overflow-y-auto w-full custom-scrollbar">
                     </div>
-                    <div class="form-group">
-                        <label>WRITING TONE</label>
-                        <select id="projectTone" onchange="updatePreview()">
-                            <option value="startup">Startup Tone</option>
-                            <option value="academic">Academic Tone</option>
-                        </select>
-                    </div>
-                </div>
+            </div>
+        </section>
+    </main>
 
-                <div class="button-grid">
-                    <button onclick="downloadReadme()" class="btn-primary">Download .md</button>
-                    <button onclick="exportPDF()" class="btn-danger">Export PDF</button>
-                    <button onclick="copyToClipboard()" class="btn-secondary">Copy MD</button>
-                    <button onclick="exportDOC()" class="btn-muted" style="background: #F0F0F0;">Export DOC</button>
-                    <button onclick="resetApp()" class="btn-muted">Reset</button>
-                </div>
-            </section>
-
-            <section class="preview-container glass-panel slide-up">
-                <div class="preview-header">
-                    <span>✨ Preview</span>
-                    <button class="toggle-light" onclick="toggleDarkMode()">☀️ LIGHT</button>
-                </div>
-                <div id="preview" class="theme-dark">
-                    <div class="placeholder">Waiting for your project idea...</div>
-                </div>
-            </section>
-        </div>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>

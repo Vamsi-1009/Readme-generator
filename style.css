@@ -1,15 +1,53 @@
 :root { --accent: #22d3ee; }
-body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #020617; }
-.blob-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: blur(80px); }
-.blob { position: absolute; border-radius: 50%; opacity: 0.4; }
-.blob-1 { width: 500px; height: 500px; background: #4f46e5; top: -10%; left: -10%; animation: float 20s infinite alternate; }
-@keyframes float { from { transform: translate(0, 0); } to { transform: translate(100px, 50px); } }
-.glass-card { background: rgba(15, 23, 42, 0.7) !important; backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; }
-#previewArea { color: #f1f5f9 !important; font-size: 1.05rem; line-height: 1.7; opacity: 1 !important; }
-#previewArea h1 { color: #ffffff !important; font-weight: 800; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
-#previewArea h2 { color: var(--accent) !important; font-weight: 700; margin-top: 32px; }
+
+/* Allow scrolling on mobile, but keep fixed on laptop if content fits */
+body, html { 
+    margin: 0; padding: 0; 
+    width: 100%; min-height: 100%; 
+    background-color: #020617; 
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent; /* Smooth touch for Android/iOS */
+}
+
+/* Background Blobs - scaled down for smaller screens */
+.blob-container { position: fixed; inset: 0; z-index: 0; filter: blur(60px); }
+.blob { position: absolute; border-radius: 50%; opacity: 0.3; transition: all 1s ease; }
+.blob-1 { width: 300px; height: 300px; background: #4f46e5; top: -5%; left: -5%; animation: float 20s infinite alternate; }
+.blob-2 { width: 250px; height: 250px; background: #7c3aed; bottom: 0; right: 0; }
+@media (min-width: 1024px) {
+    .blob-1 { width: 500px; height: 500px; }
+    .blob-2 { width: 400px; height: 400px; }
+    .blob-container { filter: blur(80px); }
+}
+
+@keyframes float { 
+    from { transform: translate(0, 0) scale(1); } 
+    to { transform: translate(50px, 30px) scale(1.1); } 
+}
+
+.glass-card { 
+    background: rgba(15, 23, 42, 0.7) !important; 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); /* Required for iOS/Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 24px; 
+}
+
+/* Visibility and Break-word fix for small screens */
+#previewArea { 
+    color: #f1f5f9 !important; 
+    font-size: 0.95rem; 
+    line-height: 1.7; 
+    opacity: 1 !important; 
+    word-break: break-word; /* Prevents text overflow on narrow phones */
+}
+
+#previewArea h1 { color: #ffffff !important; font-weight: 800; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; font-size: 1.5rem; }
+#previewArea h2 { color: var(--accent) !important; font-weight: 700; margin-top: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-size: 1.25rem; }
 #previewArea p, #previewArea li { color: #e2e8f0 !important; font-weight: 500; }
-.custom-scrollbar::-webkit-scrollbar { width: 6px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
 .template-card { cursor: pointer; transition: all 0.3s ease; }
-.template-card:hover { transform: translateY(-3px); background: rgba(34, 211, 238, 0.1); }
+.template-card:active { transform: scale(0.95); } /* Touch feedback */

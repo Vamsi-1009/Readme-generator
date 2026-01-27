@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Auto README Generator | AI Powered</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-950 text-white overflow-hidden font-['Plus_Jakarta_Sans'] w-screen h-screen">
+<body class="bg-slate-950 text-white min-h-screen w-screen overflow-x-hidden font-['Plus_Jakarta_Sans']">
 
     <div class="blob-container">
         <div class="blob blob-1"></div>
@@ -19,52 +19,52 @@
         <div class="blob blob-3"></div>
     </div>
 
-    <main class="relative z-10 h-screen w-full flex flex-col p-6 lg:p-10 gap-6 overflow-hidden">
-        <header class="flex justify-between items-center header-anim flex-shrink-0">
-            <div>
-                <h1 class="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">Auto README</h1>
-                <p class="text-slate-400 text-sm">Professional documentation in seconds.</p>
+    <main class="relative z-10 min-h-screen w-full flex flex-col p-4 md:p-6 lg:p-10 gap-6">
+        <header class="flex flex-col sm:flex-row justify-between items-center gap-4 flex-shrink-0">
+            <div class="text-center sm:text-left">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">Auto README</h1>
+                <p class="text-slate-400 text-xs md:text-sm">Professional documentation in seconds.</p>
             </div>
-            <div class="flex gap-3">
-                <button id="resetBtn" class="px-5 py-2 rounded-full border border-slate-700 hover:bg-red-500/10 hover:border-red-500/50 transition-all text-sm">Clear All</button>
-                <div class="h-10 w-[1px] bg-slate-800 mx-2"></div>
-                <button onclick="exportMD()" class="px-5 py-2 rounded-full bg-slate-800 hover:bg-slate-700 transition text-sm font-semibold border border-slate-700">.MD</button>
-                <button onclick="exportDOC()" class="px-5 py-2 rounded-full bg-slate-800 hover:bg-slate-700 transition text-sm font-semibold border border-slate-700">.DOCX</button>
-                <button id="exportPDFBtn" class="px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 font-bold hover:scale-105 transition shadow-[0_0_20px_rgba(147,51,234,0.3)]">Export PDF</button>
+            <div class="flex gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto justify-center">
+                <button id="resetBtn" class="whitespace-nowrap px-4 py-2 rounded-full border border-slate-700 hover:bg-red-500/10 transition-all text-xs">Clear All</button>
+                <div class="hidden sm:block h-10 w-[1px] bg-slate-800 mx-1"></div>
+                <button onclick="exportMD()" class="px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-xs">.MD</button>
+                <button onclick="exportDOC()" class="px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-xs">.DOCX</button>
+                <button id="exportPDFBtn" class="whitespace-nowrap px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 font-bold shadow-lg text-xs">Export PDF</button>
             </div>
         </header>
 
-        <section class="flex-1 flex flex-row gap-6 overflow-hidden w-full h-full min-h-0">
-            <div class="w-full lg:w-5/12 glass-card p-8 overflow-y-auto side-pane-left custom-scrollbar flex flex-col min-w-[380px]">
-                <div class="mb-8">
+        <section class="flex-1 flex flex-col lg:flex-row gap-6 w-full min-h-0">
+            <div class="w-full lg:w-5/12 glass-card p-6 md:p-8 flex flex-col min-h-[450px] lg:min-h-0">
+                <div class="mb-6">
                     <label class="text-[10px] uppercase tracking-[0.2em] text-cyan-400 font-bold mb-4 block">1. Select Project Style</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button onclick="applyTemplate('web')" class="template-card p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl group-hover:scale-110 transition">🌐</span>
-                            <span class="text-[10px] font-bold uppercase tracking-tighter">Web App</span>
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                        <button onclick="applyTemplate('web')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
+                            <span class="text-xl">🌐</span>
+                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Web App</span>
                         </button>
-                        <button onclick="applyTemplate('python')" class="template-card p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl group-hover:scale-110 transition">🐍</span>
-                            <span class="text-[10px] font-bold uppercase tracking-tighter">Data Science</span>
+                        <button onclick="applyTemplate('python')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
+                            <span class="text-xl">🐍</span>
+                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Data Science</span>
                         </button>
-                        <button onclick="applyTemplate('mobile')" class="template-card p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl group-hover:scale-110 transition">📱</span>
-                            <span class="text-[10px] font-bold uppercase tracking-tighter">Mobile App</span>
+                        <button onclick="applyTemplate('mobile')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
+                            <span class="text-xl">📱</span>
+                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Mobile App</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <h2 class="text-2xl font-bold mb-2 flex items-center gap-3">
-                        <span class="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></span>
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 flex items-center gap-3">
+                        <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
                         2. Project Vision
                     </h2>
                 </div>
                 
                 <div class="space-y-6 flex-1 flex flex-col" id="readmeForm">
-                    <div class="input-group flex-1 flex flex-col">
+                    <div class="input-group flex-1 flex flex-col min-h-[200px]">
                         <textarea id="pDesc" placeholder="Describe your project here..." 
-                        class="w-full flex-1 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 focus:border-cyan-500 transition text-lg leading-relaxed resize-none text-white shadow-inner"></textarea>
+                        class="w-full flex-1 bg-slate-900/60 border border-slate-800 rounded-2xl p-4 md:p-6 focus:border-cyan-500 transition text-md md:text-lg leading-relaxed resize-none text-white shadow-inner outline-none"></textarea>
                     </div>
 
                     <input type="hidden" id="pTitle">
@@ -72,35 +72,30 @@
                     <input type="hidden" id="pFeatures">
                     <input type="hidden" id="pInstall">
 
-                    <div class="pt-4">
-                        <button id="manualGenerateBtn" class="w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-extrabold text-white tracking-widest hover:scale-[1.01] transition-all shadow-[0_0_30px_rgba(6,182,212,0.4)] flex items-center justify-center gap-3 active:scale-95">
-                            <span>✨ ANALYZE & GENERATE README</span>
+                    <div class="pt-2">
+                        <button id="manualGenerateBtn" class="w-full py-4 md:py-5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-extrabold text-white tracking-widest active:scale-95 transition-all shadow-lg text-sm md:text-base">
+                            ✨ ANALYZE & GENERATE README
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="hidden lg:flex flex-1 glass-card p-0 overflow-hidden side-pane-right relative flex-col min-w-[450px]">
-                <div class="absolute top-0 w-full bg-slate-900/90 px-6 py-3 text-[10px] tracking-widest text-cyan-400 flex justify-between items-center z-20 backdrop-blur-md border-b border-white/10">
-                    <span class="font-bold flex items-center gap-2">
-                        <div class="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                        PROFESSIONAL OUTPUT
-                    </span>
-                    <div class="flex items-center gap-4">
-                        <button id="toggleEditBtn" class="bg-slate-800 px-3 py-1 rounded border border-slate-700 hover:bg-slate-700 transition text-[9px] uppercase font-bold tracking-tighter">
-                            ✏️ Edit Mode
-                        </button>
+            <div class="w-full lg:flex-1 glass-card p-0 overflow-hidden relative flex flex-col min-h-[500px] lg:min-h-0">
+                <div class="absolute top-0 w-full bg-slate-900/90 px-4 md:px-6 py-3 text-[10px] tracking-widest text-cyan-400 flex justify-between items-center z-20 border-b border-white/10">
+                    <span class="font-bold flex items-center gap-2 uppercase">Professional Output</span>
+                    <div class="flex items-center gap-2 md:gap-4">
+                        <button id="toggleEditBtn" class="bg-slate-800 px-2 py-1 rounded border border-slate-700 text-[9px] font-bold uppercase">Edit</button>
                         <span id="charCount" class="bg-slate-950 px-2 py-1 rounded border border-slate-800 font-mono text-slate-400">0 chars</span>
                     </div>
                 </div>
                 
                 <div class="relative flex-1 mt-12 overflow-hidden">
-                    <div id="previewArea" class="prose prose-invert max-w-none p-10 overflow-y-auto w-full h-full custom-scrollbar text-white">
-                        <div class="h-full flex flex-col items-center justify-center text-slate-500 opacity-40 italic">
+                    <div id="previewArea" class="prose prose-invert max-w-none p-6 md:p-10 overflow-y-auto w-full h-full custom-scrollbar text-white">
+                        <div class="h-full flex flex-col items-center justify-center text-slate-500 opacity-40 italic text-center">
                             <p>Waiting for project description...</p>
                         </div>
                     </div>
-                    <textarea id="manualEditor" class="hidden absolute inset-0 w-full h-full bg-slate-950 p-10 text-slate-200 font-mono text-sm leading-relaxed focus:outline-none resize-none custom-scrollbar"></textarea>
+                    <textarea id="manualEditor" class="hidden absolute inset-0 w-full h-full bg-slate-950 p-6 md:p-10 text-slate-200 font-mono text-xs md:text-sm leading-relaxed outline-none resize-none"></textarea>
                 </div>
             </div>
         </section>

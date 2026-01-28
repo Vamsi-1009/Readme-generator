@@ -179,12 +179,11 @@
             aiBtn.innerHTML = `<span>⏳</span> Writing...`;
             aiBtn.disabled = true;
             try {
-
-                // Change this line in your index.html:
-                onst response = await fetch('https://readme-generator-loob.onrender.com/generate-readme', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ prompt: userInput })
+                const response = await fetch('http://localhost:3001/generate-readme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userInput })
+                });
                 const data = await response.json();
                 if (data.markdown) {
                     editor.value = data.markdown;

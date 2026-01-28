@@ -2,104 +2,232 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Auto README Generator | AI Powered</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>README AI Pro - Bilingual Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+        #preview-content h1 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 2em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; color: #1f2328; }
+        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; color: #1f2328; }
+        #preview-content pre { background-color: #f6f8fa; border-radius: 6px; padding: 16px; border: 1px solid #d0d7de; margin-bottom: 16px; overflow-x: auto; }
+        #preview-content code { background-color: rgba(175, 184, 193, 0.2); padding: 0.2em 0.4em; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 85%; }
+        #preview-content ul { list-style-type: disc; padding-left: 2em; margin-bottom: 16px; }
+        #preview-content p { margin-bottom: 16px; line-height: 1.6; }
+    </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen w-screen overflow-x-hidden font-['Plus_Jakarta_Sans']">
+<body class="bg-[#0d1117] text-gray-300 font-sans h-screen overflow-hidden flex flex-col">
 
-    <div class="blob-container">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <main class="relative z-10 min-h-screen w-full flex flex-col p-4 md:p-6 lg:p-10 gap-6">
-        <header class="flex flex-col sm:flex-row justify-between items-center gap-4 flex-shrink-0">
-            <div class="text-center sm:text-left">
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">Auto README</h1>
-                <p class="text-slate-400 text-xs md:text-sm">Professional documentation in seconds.</p>
+    <header class="h-16 border-b border-[#30363d] flex items-center justify-between px-6 bg-[#161b22] shadow-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg text-xl">R</div>
+            <div>
+                <h1 class="text-lg font-bold text-white leading-none">README Generator</h1>
+                <span class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">AI Pro Edition</span>
             </div>
-            <div class="flex gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto justify-center">
-                <button id="resetBtn" class="whitespace-nowrap px-4 py-2 rounded-full border border-slate-700 hover:bg-red-500/10 transition-all text-xs">Clear All</button>
-                <div class="hidden sm:block h-10 w-[1px] bg-slate-800 mx-1"></div>
-                <button onclick="exportMD()" class="px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-xs">.MD</button>
-                <button onclick="exportDOC()" class="px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-xs">.DOCX</button>
-                <button id="exportPDFBtn" class="whitespace-nowrap px-5 py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 font-bold shadow-lg text-xs">Export PDF</button>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="copyToClipboard()" class="bg-[#21262d] hover:bg-[#30363d] border border-[#363b42] text-white px-4 py-2 rounded-lg font-medium text-sm transition">
+                Copy Code
+            </button>
+            <button onclick="generateAI()" id="ai-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all shadow-lg active:scale-95">
+                ✨ Generate Full README
+            </button>
+            <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">Download .docx</button>
+            <button onclick="downloadReadme()" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
+                Download .md
+            </button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-64 bg-[#0d1117] border-r border-[#30363d] p-4 flex flex-col hidden lg:flex">
+            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Templates</h3>
+            <div id="template-list" class="space-y-1 overflow-y-auto pr-2"></div>
+        </aside>
+
+        <section class="flex-1 flex flex-col border-r border-[#30363d]">
+            <div class="bg-[#161b22] px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between">
+                <span>Markdown Input</span>
+                <span id="char-count">0 chars</span>
             </div>
-        </header>
+            <textarea id="editor" oninput="updatePreview()" 
+                class="flex-1 w-full p-8 bg-transparent outline-none resize-none text-gray-300 font-mono text-[14px] leading-relaxed"
+                placeholder="Select a template or type your project details here..."></textarea>
+        </section>
 
-        <section class="flex-1 flex flex-col lg:flex-row gap-6 w-full min-h-0">
-            <div class="w-full lg:w-5/12 glass-card p-6 md:p-8 flex flex-col min-h-[450px] lg:min-h-0">
-                <div class="mb-6">
-                    <label class="text-[10px] uppercase tracking-[0.2em] text-cyan-400 font-bold mb-4 block">1. Select Project Style</label>
-                    <div class="grid grid-cols-3 gap-2 sm:gap-3">
-                        <button onclick="applyTemplate('web')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl">🌐</span>
-                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Web App</span>
-                        </button>
-                        <button onclick="applyTemplate('python')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl">🐍</span>
-                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Data Science</span>
-                        </button>
-                        <button onclick="applyTemplate('mobile')" class="template-card p-2 sm:p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:border-cyan-500/50 transition-all flex flex-col items-center gap-2 group">
-                            <span class="text-xl">📱</span>
-                            <span class="text-[8px] sm:text-[10px] font-bold uppercase tracking-tighter">Mobile App</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <h2 class="text-xl md:text-2xl font-bold mb-2 flex items-center gap-3">
-                        <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                        2. Project Vision
-                    </h2>
-                </div>
-                
-                <div class="space-y-6 flex-1 flex flex-col" id="readmeForm">
-                    <div class="input-group flex-1 flex flex-col min-h-[200px]">
-                        <textarea id="pDesc" placeholder="Describe your project here..." 
-                        class="w-full flex-1 bg-slate-900/60 border border-slate-800 rounded-2xl p-4 md:p-6 focus:border-cyan-500 transition text-md md:text-lg leading-relaxed resize-none text-white shadow-inner outline-none"></textarea>
-                    </div>
-
-                    <input type="hidden" id="pTitle">
-                    <input type="hidden" id="pTech">
-                    <input type="hidden" id="pFeatures">
-                    <input type="hidden" id="pInstall">
-
-                    <div class="pt-2">
-                        <button id="manualGenerateBtn" class="w-full py-4 md:py-5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 font-extrabold text-white tracking-widest active:scale-95 transition-all shadow-lg text-sm md:text-base">
-                            ✨ ANALYZE & GENERATE README
-                        </button>
-                    </div>
-                </div>
+        <section class="flex-1 flex flex-col bg-white">
+            <div class="bg-gray-100 px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between items-center">
+                <span>Live Rendering</span>
+                <button id="toggle-edit-btn" onclick="toggleEditMode()" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase transition hover:bg-blue-200">
+                    Edit Result
+                </button>
             </div>
-
-            <div class="w-full lg:flex-1 glass-card p-0 overflow-hidden relative flex flex-col min-h-[500px] lg:min-h-0">
-                <div class="absolute top-0 w-full bg-slate-900/90 px-4 md:px-6 py-3 text-[10px] tracking-widest text-cyan-400 flex justify-between items-center z-20 border-b border-white/10">
-                    <span class="font-bold flex items-center gap-2 uppercase">Professional Output</span>
-                    <div class="flex items-center gap-2 md:gap-4">
-                        <button id="toggleEditBtn" class="bg-slate-800 px-2 py-1 rounded border border-slate-700 text-[9px] font-bold uppercase">Edit</button>
-                        <span id="charCount" class="bg-slate-950 px-2 py-1 rounded border border-slate-800 font-mono text-slate-400">0 chars</span>
-                    </div>
-                </div>
-                
-                <div class="relative flex-1 mt-12 overflow-hidden">
-                    <div id="previewArea" class="prose prose-invert max-w-none p-6 md:p-10 overflow-y-auto w-full h-full custom-scrollbar text-white">
-                        <div class="h-full flex flex-col items-center justify-center text-slate-500 opacity-40 italic text-center">
-                            <p>Waiting for project description...</p>
-                        </div>
-                    </div>
-                    <textarea id="manualEditor" class="hidden absolute inset-0 w-full h-full bg-slate-950 p-6 md:p-10 text-slate-200 font-mono text-xs md:text-sm leading-relaxed outline-none resize-none"></textarea>
-                </div>
+            <div class="flex-1 relative">
+                <div id="preview-content" class="absolute inset-0 p-10 overflow-y-auto text-[#1f2328]"></div>
+                <textarea id="result-editor" oninput="syncFromEdit()" 
+                    class="absolute inset-0 p-10 w-full h-full hidden outline-none resize-none font-mono text-sm leading-relaxed border-none text-gray-800 bg-[#fdfdfd]"></textarea>
             </div>
         </section>
-    </main>
-    <script src="script.js"></script>
+    </div>
+
+    <script>
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview-content');
+        const aiBtn = document.getElementById('ai-btn');
+        const resultEditor = document.getElementById('result-editor');
+        let isEditMode = false;
+
+        const templateData = [
+            { name: 'React Web App', icon: '⚛️', prompt: 'A modern React web application with Tailwind CSS and Vite.' },
+            { name: 'Node.js Backend', icon: '🟢', prompt: 'An Express.js REST API with JWT authentication and MongoDB.' },
+            { name: 'Python Package', icon: '🐍', prompt: 'A reusable Python library published on PyPI.' },
+            { name: 'Machine Learning', icon: '🤖', prompt: 'An ML model training pipeline using Scikit-Learn or PyTorch.' },
+            { name: 'Portfolio Website', icon: '🎨', prompt: 'A personal portfolio website showcasing developer projects.' },
+            { name: 'Bilingual Dictionary', icon: '📘', prompt: 'Word Guess Dictionary: An interactive English-Telugu vocabulary app using JSON.' },
+            { name: 'Mobile App', icon: '📱', prompt: 'A cross-platform mobile application built with Flutter.' },
+            { name: 'Browser Extension', icon: '🧩', prompt: 'A Chrome extension that enhances tab productivity.' },
+            { name: 'API Documentation', icon: '📖', prompt: 'Comprehensive documentation for a public REST API.' },
+            { name: 'CLI Tool', icon: '💻', prompt: 'A Command Line Interface tool built with Go or Rust.' },
+            { name: 'Discord Bot', icon: '🤖', prompt: 'A Discord bot with slash commands for server management.' },
+            { name: 'Data Analysis', icon: '📊', prompt: 'A Jupyter Notebook project analyzing global climate data.' },
+            { name: 'Unity Game', icon: '🎮', prompt: 'A 2D platformer game built in Unity with C#.' },
+            { name: 'Dockerized App', icon: '🐳', prompt: 'A multi-container application managed with Docker Compose.' },
+            { name: 'Automation Script', icon: '⚙️', prompt: 'A collection of Python scripts for cloud task automation.' },
+            { name: 'Open Source Lib', icon: '🔓', prompt: 'A community-driven UI component library.' },
+            { name: 'Arduino Project', icon: '🔌', prompt: 'An IoT weather station using ESP32 and DHT11.' },
+            { name: 'E-commerce Site', icon: '🛍️', prompt: 'A full-stack e-commerce platform with Stripe integration.' },
+            { name: 'Blog Platform', icon: '✍️', prompt: 'A Next.js blog with Markdown support and SEO optimization.' },
+            { name: 'Chat Application', icon: '💬', prompt: 'Real-time chat app using WebSockets and Socket.io.' }
+        ];
+
+        const templateList = document.getElementById('template-list');
+        templateData.forEach(t => {
+            const btn = document.createElement('button');
+            btn.className = "w-full text-left p-2 rounded text-sm hover:bg-gray-800 transition flex items-center gap-2 mb-1";
+            btn.innerHTML = `<span>${t.icon}</span> ${t.name}`;
+            btn.onclick = () => {
+                editor.value = t.prompt;
+                updatePreview();
+            };
+            templateList.appendChild(btn);
+        });
+
+        function updatePreview() {
+            preview.innerHTML = marked.parse(editor.value);
+            document.getElementById('char-count').innerText = `${editor.value.length} chars`;
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('toggle-edit-btn');
+            if (isEditMode) {
+                btn.innerText = "Save & Preview";
+                btn.className = "bg-green-100 text-green-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase";
+                resultEditor.value = editor.value;
+                resultEditor.classList.remove('hidden');
+            } else {
+                btn.innerText = "Edit Result";
+                btn.className = "bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase";
+                editor.value = resultEditor.value;
+                resultEditor.classList.add('hidden');
+                updatePreview();
+            }
+        }
+
+        function syncFromEdit() {
+            editor.value = resultEditor.value;
+            updatePreview();
+        }
+
+        function downloadDocx() {
+            const content = editor.value.trim();
+            if (!content) return alert("No content to download!");
+        
+            // 1. Convert Markdown to HTML (Word handles HTML better for .doc/.docx)
+            const htmlContent = marked.parse(content);
+        
+            // 2. Wrap in basic Word-friendly XML/HTML structure
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+                    "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+                    "xmlns='http://www.w3.org/TR/REC-html40'>"+
+                    "<head><meta charset='utf-8'><title>README</title></head><body>";
+            const footer = "</body></html>";
+            const sourceHTML = header + htmlContent + footer;
+        
+            // 3. Create a Blob with the application/msword type
+            const blob = new Blob(['\ufeff', sourceHTML], {
+                type: 'application/msword'
+            });
+        
+            // 4. Trigger Download
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "README.doc"; // Saves as .doc which Word opens perfectly
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        async function generateAI() {
+            const userInput = editor.value.trim();
+            if(!userInput) return alert("Please type details or select a template!");
+            aiBtn.innerHTML = `<span>⏳</span> Writing...`;
+            aiBtn.disabled = true;
+            try {
+                const response = await fetch('http://localhost:3001/generate-readme', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userInput })
+                });
+                const data = await response.json();
+                if (data.markdown) {
+                    editor.value = data.markdown;
+                    resultEditor.value = data.markdown;
+                    autoFixLayout();
+                    updatePreview();
+                } else {
+                    alert("Error: " + (data.error || "Generation failed."));
+                }
+            } catch (error) {
+                alert("Server not found! Run 'node server.js' first.");
+            } finally {
+                aiBtn.innerHTML = "✨ Generate Full README";
+                aiBtn.disabled = false;
+            }
+        }
+
+        function autoFixLayout() {
+            let text = editor.value;
+            text = text.replace(/([^\n])\n#/g, '$1\n\n#');
+            text = text.replace(/#([^\s#])/g, '# $1');
+            editor.value = text;
+        }
+
+        function copyToClipboard() {
+            editor.select();
+            document.execCommand('copy');
+            alert("Markdown copied!");
+        }
+
+        function downloadReadme() {
+            if (!editor.value) return alert("No content!");
+            const blob = new Blob([editor.value], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = "README.md";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        updatePreview();
+    </script>
 </body>
 </html>

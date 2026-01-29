@@ -3,39 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README AI Pro - Bilingual Editor</title>
+    <title>README Pro - Offline Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
-        #preview-content h1 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 2em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; color: #1f2328; }
-        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; color: #1f2328; }
+        body { transition: background-color 0.3s, color 0.3s; }
+        #preview-content h1 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 2em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; }
+        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; }
         #preview-content pre { background-color: #f6f8fa; border-radius: 6px; padding: 16px; border: 1px solid #d0d7de; margin-bottom: 16px; overflow-x: auto; }
         #preview-content code { background-color: rgba(175, 184, 193, 0.2); padding: 0.2em 0.4em; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 85%; }
-        #preview-content ul { list-style-type: disc; padding-left: 2em; margin-bottom: 16px; }
-        #preview-content p { margin-bottom: 16px; line-height: 1.6; }
+        .github-mode { background-color: #f6f8fa !important; padding: 2rem !important; }
+        .github-box { background: white; border: 1px solid #d0d7de; border-radius: 6px; max-width: 900px; margin: 0 auto; }
+        .github-header { background: #f6f8fa; border-bottom: 1px solid #d0d7de; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1f2328; border-radius: 6px 6px 0 0; }
     </style>
 </head>
-<body class="bg-[#0d1117] text-gray-300 font-sans h-screen overflow-hidden flex flex-col">
+<body id="body-theme" class="bg-[#0d1117] text-gray-300 font-sans h-screen overflow-hidden flex flex-col">
 
-    <header class="h-16 border-b border-[#30363d] flex items-center justify-between px-6 bg-[#161b22] shadow-xl">
+    <header id="main-header" class="h-16 border-b border-[#30363d] flex items-center justify-between px-6 bg-[#161b22] shadow-xl transition-colors">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg text-xl">R</div>
+            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg text-xl">R</div>
             <div>
                 <h1 class="text-lg font-bold text-white leading-none">README Generator</h1>
-                <span class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">AI Pro Edition</span>
+                <span class="text-[10px] text-green-400 uppercase tracking-widest font-bold">Offline Pro Edition</span>
             </div>
         </div>
-        <div class="flex gap-3">
+        <div class="flex items-center gap-3">
+            <button onclick="toggleTheme()" class="p-2 rounded-lg bg-[#21262d] hover:bg-[#30363d] border border-[#363b42] transition">
+                <span id="theme-icon">☀️</span>
+            </button>
+            <button onclick="clearEditor()" class="bg-red-900/30 hover:bg-red-800/50 border border-red-500/50 text-red-200 px-4 py-2 rounded-lg font-medium text-sm transition">
+                Clear All
+            </button>
             <button onclick="copyToClipboard()" class="bg-[#21262d] hover:bg-[#30363d] border border-[#363b42] text-white px-4 py-2 rounded-lg font-medium text-sm transition">
                 Copy Code
             </button>
-            <button onclick="generateAI()" id="ai-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all shadow-lg active:scale-95">
-                ✨ Generate Full README
+            <button onclick="generateOffline()" id="gen-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all shadow-lg active:scale-95">
+                ✨ Generate Instant README
             </button>
-            <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">Download .docx</button>
+            <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
+                Download .docx
+            </button>
             <button onclick="downloadReadme()" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
                 Download .md
             </button>
@@ -43,187 +53,151 @@
     </header>
 
     <div class="flex flex-1 overflow-hidden">
-        <aside class="w-64 bg-[#0d1117] border-r border-[#30363d] p-4 flex flex-col hidden lg:flex">
-            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Templates</h3>
+        <aside id="sidebar" class="w-64 bg-[#0d1117] border-r border-[#30363d] p-4 flex flex-col hidden lg:flex transition-colors">
+            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Quick Starters</h3>
             <div id="template-list" class="space-y-1 overflow-y-auto pr-2"></div>
         </aside>
 
-        <section class="flex-1 flex flex-col border-r border-[#30363d]">
-            <div class="bg-[#161b22] px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between">
-                <span>Markdown Input</span>
+        <section id="editor-section" class="flex-1 flex flex-col border-r border-[#30363d]">
+            <div id="editor-label" class="bg-[#161b22] px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between transition-colors">
+                <span>Input Project Details</span>
                 <span id="char-count">0 chars</span>
             </div>
             <textarea id="editor" oninput="updatePreview()" 
                 class="flex-1 w-full p-8 bg-transparent outline-none resize-none text-gray-300 font-mono text-[14px] leading-relaxed"
-                placeholder="Select a template or type your project details here..."></textarea>
+                placeholder="Select a template, then click Generate!"></textarea>
         </section>
 
         <section class="flex-1 flex flex-col bg-white">
-            <div class="bg-gray-100 px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between items-center">
+            <div class="bg-gray-100 px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between items-center border-b">
+                <div class="flex gap-2">
+                    <button id="toggle-edit-btn" onclick="toggleEditMode()" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md transition hover:bg-blue-200">Edit</button>
+                    <button id="github-view-btn" onclick="toggleGitHubMode()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md transition hover:bg-gray-300">👁️ GitHub View</button>
+                </div>
                 <span>Live Rendering</span>
-                <button id="toggle-edit-btn" onclick="toggleEditMode()" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase transition hover:bg-blue-200">
-                    Edit Result
-                </button>
             </div>
             <div class="flex-1 relative">
-                <div id="preview-content" class="absolute inset-0 p-10 overflow-y-auto text-[#1f2328]"></div>
-                <textarea id="result-editor" oninput="syncFromEdit()" 
-                    class="absolute inset-0 p-10 w-full h-full hidden outline-none resize-none font-mono text-sm leading-relaxed border-none text-gray-800 bg-[#fdfdfd]"></textarea>
+                <div id="preview-container" class="absolute inset-0 overflow-y-auto">
+                    <div id="github-wrapper">
+                        <div id="github-header-ui" class="github-header hidden"><span>📜</span> README.md</div>
+                        <div id="preview-content" class="p-10 text-[#1f2328]"></div>
+                    </div>
+                </div>
+                <textarea id="result-editor" oninput="syncFromEdit()" class="absolute inset-0 p-10 w-full h-full hidden outline-none resize-none font-mono text-sm border-none text-gray-800 bg-[#fdfdfd]"></textarea>
             </div>
         </section>
     </div>
 
     <script>
         const editor = document.getElementById('editor');
-        const preview = document.getElementById('preview-content');
-        const aiBtn = document.getElementById('ai-btn');
+        const previewContent = document.getElementById('preview-content');
+        const previewContainer = document.getElementById('preview-container');
+        const githubHeader = document.getElementById('github-header-ui');
+        const githubWrapper = document.getElementById('github-wrapper');
         const resultEditor = document.getElementById('result-editor');
-        let isEditMode = false;
+        const bodyTheme = document.getElementById('body-theme');
+        const sidebar = document.getElementById('sidebar');
+        const mainHeader = document.getElementById('main-header');
+        const editorLabel = document.getElementById('editor-label');
+        let isEditMode = false; let isDarkMode = true; let isGitHubMode = false;
 
-        const templateData = [
-            { name: 'React Web App', icon: '⚛️', prompt: 'A modern React web application with Tailwind CSS and Vite.' },
-            { name: 'Node.js Backend', icon: '🟢', prompt: 'An Express.js REST API with JWT authentication and MongoDB.' },
-            { name: 'Python Package', icon: '🐍', prompt: 'A reusable Python library published on PyPI.' },
-            { name: 'Machine Learning', icon: '🤖', prompt: 'An ML model training pipeline using Scikit-Learn or PyTorch.' },
-            { name: 'Portfolio Website', icon: '🎨', prompt: 'A personal portfolio website showcasing developer projects.' },
-            { name: 'Bilingual Dictionary', icon: '📘', prompt: 'Word Guess Dictionary: An interactive English-Telugu vocabulary app using JSON.' },
-            { name: 'Mobile App', icon: '📱', prompt: 'A cross-platform mobile application built with Flutter.' },
-            { name: 'Browser Extension', icon: '🧩', prompt: 'A Chrome extension that enhances tab productivity.' },
-            { name: 'API Documentation', icon: '📖', prompt: 'Comprehensive documentation for a public REST API.' },
-            { name: 'CLI Tool', icon: '💻', prompt: 'A Command Line Interface tool built with Go or Rust.' },
-            { name: 'Discord Bot', icon: '🤖', prompt: 'A Discord bot with slash commands for server management.' },
-            { name: 'Data Analysis', icon: '📊', prompt: 'A Jupyter Notebook project analyzing global climate data.' },
-            { name: 'Unity Game', icon: '🎮', prompt: 'A 2D platformer game built in Unity with C#.' },
-            { name: 'Dockerized App', icon: '🐳', prompt: 'A multi-container application managed with Docker Compose.' },
-            { name: 'Automation Script', icon: '⚙️', prompt: 'A collection of Python scripts for cloud task automation.' },
-            { name: 'Open Source Lib', icon: '🔓', prompt: 'A community-driven UI component library.' },
-            { name: 'Arduino Project', icon: '🔌', prompt: 'An IoT weather station using ESP32 and DHT11.' },
-            { name: 'E-commerce Site', icon: '🛍️', prompt: 'A full-stack e-commerce platform with Stripe integration.' },
-            { name: 'Blog Platform', icon: '✍️', prompt: 'A Next.js blog with Markdown support and SEO optimization.' },
-            { name: 'Chat Application', icon: '💬', prompt: 'Real-time chat app using WebSockets and Socket.io.' }
-        ];
+        const projectSpecifics = {
+            'React App': { icon: '⚛️', stack: '- React.js\n- Tailwind CSS\n- Vite', structure: 'src/\n├── components/\n├── hooks/\n├── App.jsx\n└── main.jsx' },
+            'Node.js API': { icon: '🟢', stack: '- Node.js\n- Express.js\n- MongoDB', structure: 'src/\n├── controllers/\n├── models/\n├── routes/\n└── server.js' },
+            'Python Tool': { icon: '🐍', stack: '- Python 3.x\n- Requests', structure: 'scripts/\n├── main.py\n├── utils.py\n└── requirements.txt' },
+            'Machine Learning': { icon: '🤖', stack: '- PyTorch\n- Pandas\n- NumPy', structure: 'models/\ndata/\n├── raw/\n├── processed/\n└── train.py' },
+            'Portfolio Site': { icon: '🎨', stack: '- HTML5/CSS3\n- JavaScript', structure: 'index.html\n├── css/style.css\n├── js/main.js\n└── assets/img/' },
+            'Bilingual App': { icon: '📘', stack: '- JavaScript\n- JSON Data', structure: 'data/dictionary.json\n├── js/app.js\n└── index.html' },
+            'Discord Bot': { icon: '💬', stack: '- Discord.js\n- Dotenv', structure: 'commands/\n├── fun/\n├── admin/\nindex.js\n└── config.json' },
+            'CLI Tool': { icon: '💻', stack: '- Rust or Go\n- Clap/Cobra', structure: 'src/\n├── main.rs\n├── parser.rs\n└── cli.rs' },
+            'Unity Game': { icon: '🎮', stack: '- Unity Engine\n- C#', structure: 'Assets/\n├── Scripts/\n├── Prefabs/\n├── Scenes/\n└── Textures/' },
+            'Mobile App': { icon: '📱', stack: '- Flutter\n- Firebase', structure: 'lib/\n├── models/\n├── screens/\n├── widgets/\n└── main.dart' },
+            'Chrome Ext.': { icon: '🧩', stack: '- Web Extension API', structure: 'manifest.json\n├── popup.html\n├── content.js\n└── background.js' },
+            'Dockerized App': { icon: '🐳', stack: '- Docker\n- Nginx', structure: 'app/\n├── Dockerfile\n├── docker-compose.yml\n└── nginx.conf' },
+            'Data Analysis': { icon: '📊', stack: '- Jupyter\n- Matplotlib', structure: 'notebooks/\n├── analysis.ipynb\n├── cleaning.ipynb\n└── data/' },
+            'Arduino/IoT': { icon: '🔌', stack: '- C++\n- ESP32', structure: 'src/\n├── sensor.ino\n├── config.h\n└── platformio.ini' },
+            'Blog Platform': { icon: '✍️', stack: '- Next.js\n- Markdown', structure: 'posts/\n├── [slug].md\napp/\n└── layout.tsx' }
+        };
 
         const templateList = document.getElementById('template-list');
-        templateData.forEach(t => {
+        Object.keys(projectSpecifics).forEach(name => {
             const btn = document.createElement('button');
-            btn.className = "w-full text-left p-2 rounded text-sm hover:bg-gray-800 transition flex items-center gap-2 mb-1";
-            btn.innerHTML = `<span>${t.icon}</span> ${t.name}`;
-            btn.onclick = () => {
-                editor.value = t.prompt;
-                updatePreview();
-            };
+            btn.className = "template-btn w-full text-left p-2 rounded text-sm transition flex items-center gap-2 mb-1 text-gray-300 hover:bg-gray-800";
+            btn.innerHTML = `<span>${projectSpecifics[name].icon}</span> ${name}`;
+            btn.onclick = () => { editor.value = `${name}\nDescribe your project goal here...`; updatePreview(); };
             templateList.appendChild(btn);
         });
 
-        function updatePreview() {
-            preview.innerHTML = marked.parse(editor.value);
-            document.getElementById('char-count').innerText = `${editor.value.length} chars`;
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const icon = document.getElementById('theme-icon');
+            const templateBtns = document.querySelectorAll('.template-btn');
+            if (isDarkMode) {
+                bodyTheme.classList.replace('bg-gray-100', 'bg-[#0d1117]'); bodyTheme.classList.replace('text-gray-900', 'text-gray-300');
+                sidebar.classList.replace('bg-white', 'bg-[#0d1117]'); mainHeader.classList.replace('bg-white', 'bg-[#161b22]');
+                editorLabel.classList.replace('bg-gray-200', 'bg-[#161b22]');
+                editor.classList.replace('text-gray-800', 'text-gray-300');
+                templateBtns.forEach(btn => { btn.classList.replace('text-gray-700', 'text-gray-300'); btn.classList.replace('hover:bg-gray-200', 'hover:bg-gray-800'); });
+                icon.innerText = "☀️";
+            } else {
+                bodyTheme.classList.replace('bg-[#0d1117]', 'bg-gray-100'); bodyTheme.classList.replace('text-gray-300', 'text-gray-900');
+                sidebar.classList.replace('bg-[#0d1117]', 'bg-white'); mainHeader.classList.replace('bg-[#161b22]', 'bg-white');
+                editorLabel.classList.replace('bg-[#161b22]', 'bg-gray-200');
+                editor.classList.replace('text-gray-300', 'text-gray-800');
+                templateBtns.forEach(btn => { btn.classList.replace('text-gray-300', 'text-gray-700'); btn.classList.replace('hover:bg-gray-800', 'hover:bg-gray-200'); });
+                icon.innerText = "🌙";
+            }
+        }
+
+        function toggleGitHubMode() {
+            isGitHubMode = !isGitHubMode;
+            if (isGitHubMode) {
+                previewContainer.classList.add('github-mode'); githubWrapper.classList.add('github-box'); githubHeader.classList.remove('hidden');
+                document.getElementById('github-view-btn').innerText = "✖️ Exit View";
+            } else {
+                previewContainer.classList.remove('github-mode'); githubWrapper.classList.remove('github-box'); githubHeader.classList.add('hidden');
+                document.getElementById('github-view-btn').innerText = "👁️ GitHub View";
+            }
+        }
+
+        function clearEditor() { if(confirm("Clear all text?")) { editor.value = ""; updatePreview(); } }
+        function updatePreview() { previewContent.innerHTML = marked.parse(editor.value || "*Preview will appear here...*"); document.getElementById('char-count').innerText = `${editor.value.length} chars`; }
+        
+        function generateOffline() {
+            const rawText = editor.value.trim(); if(!rawText) return alert("Select a template!");
+            const title = rawText.split('\n')[0]; const specs = projectSpecifics[title] || { stack: '- HTML/CSS', structure: 'index.html' };
+            editor.value = `# ${title}\n## 📖 Description\n${rawText.split('\n').slice(1).join(' ')}\n\n## 🚀 Tech Stack\n${specs.stack}\n\n## 📂 Folder Structure\n\`\`\`text\n${specs.structure}\n\`\`\`\n\n## ⚙️ Installation\n\`\`\`bash\nnpm install && npm start\n\`\`\``;
+            updatePreview();
         }
 
         function toggleEditMode() {
             isEditMode = !isEditMode;
-            const btn = document.getElementById('toggle-edit-btn');
-            if (isEditMode) {
-                btn.innerText = "Save & Preview";
-                btn.className = "bg-green-100 text-green-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase";
-                resultEditor.value = editor.value;
-                resultEditor.classList.remove('hidden');
-            } else {
-                btn.innerText = "Edit Result";
-                btn.className = "bg-blue-100 text-blue-600 px-3 py-1 rounded-md text-[10px] font-bold uppercase";
-                editor.value = resultEditor.value;
-                resultEditor.classList.add('hidden');
-                updatePreview();
-            }
+            if (isEditMode) { resultEditor.value = editor.value; resultEditor.classList.remove('hidden'); }
+            else { editor.value = resultEditor.value; resultEditor.classList.add('hidden'); updatePreview(); }
         }
 
-        function syncFromEdit() {
-            editor.value = resultEditor.value;
-            updatePreview();
+        function syncFromEdit() { editor.value = resultEditor.value; updatePreview(); }
+        function copyToClipboard() { navigator.clipboard.writeText(editor.value); alert("Copied!"); }
+        function downloadReadme() {
+            const blob = new Blob([editor.value], { type: 'text/markdown' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "README.md"; link.click();
         }
 
+        // UPDATED .DOCX DOWNLOAD LOGIC
         function downloadDocx() {
             const content = editor.value.trim();
             if (!content) return alert("No content to download!");
-        
-            // 1. Convert Markdown to HTML (Word handles HTML better for .doc/.docx)
+            
             const htmlContent = marked.parse(content);
-        
-            // 2. Wrap in basic Word-friendly XML/HTML structure
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-                    "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-                    "xmlns='http://www.w3.org/TR/REC-html40'>"+
-                    "<head><meta charset='utf-8'><title>README</title></head><body>";
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
             const footer = "</body></html>";
-            const sourceHTML = header + htmlContent + footer;
-        
-            // 3. Create a Blob with the application/msword type
-            const blob = new Blob(['\ufeff', sourceHTML], {
-                type: 'application/msword'
-            });
-        
-            // 4. Trigger Download
+            
+            const blob = new Blob(['\ufeff', header + htmlContent + footer], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = "README.doc"; // Saves as .doc which Word opens perfectly
-            document.body.appendChild(link);
+            link.download = "README.doc";
             link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        async function generateAI() {
-            const userInput = editor.value.trim();
-            if(!userInput) return alert("Please type details or select a template!");
-            aiBtn.innerHTML = `<span>⏳</span> Writing...`;
-            aiBtn.disabled = true;
-            try {
-                const response = await fetch('http://localhost:3001/generate-readme', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: userInput })
-                });
-                const data = await response.json();
-                if (data.markdown) {
-                    editor.value = data.markdown;
-                    resultEditor.value = data.markdown;
-                    autoFixLayout();
-                    updatePreview();
-                } else {
-                    alert("Error: " + (data.error || "Generation failed."));
-                }
-            } catch (error) {
-                alert("Server not found! Run 'node server.js' first.");
-            } finally {
-                aiBtn.innerHTML = "✨ Generate Full README";
-                aiBtn.disabled = false;
-            }
-        }
-
-        function autoFixLayout() {
-            let text = editor.value;
-            text = text.replace(/([^\n])\n#/g, '$1\n\n#');
-            text = text.replace(/#([^\s#])/g, '# $1');
-            editor.value = text;
-        }
-
-        function copyToClipboard() {
-            editor.select();
-            document.execCommand('copy');
-            alert("Markdown copied!");
-        }
-
-        function downloadReadme() {
-            if (!editor.value) return alert("No content!");
-            const blob = new Blob([editor.value], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = "README.md";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
             URL.revokeObjectURL(url);
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README Pro - Offline Generator</title>
+    <title>README Pro - Advanced Offline Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
@@ -11,13 +11,18 @@
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
         body { transition: background-color 0.3s, color 0.3s; }
-        #preview-content h1 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 2em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; }
-        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; }
-        #preview-content pre { background-color: #f6f8fa; border-radius: 6px; padding: 16px; border: 1px solid #d0d7de; margin-bottom: 16px; overflow-x: auto; }
-        #preview-content code { background-color: rgba(175, 184, 193, 0.2); padding: 0.2em 0.4em; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 85%; }
+        
+        /* Professional Markdown Styling */
+        #preview-content h1 { border-bottom: 2px solid #30363d; padding-bottom: .5em; font-size: 2.25em; font-weight: 800; margin-top: 24px; margin-bottom: 20px; }
+        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
+        #preview-content pre { background-color: #f6f8fa; border-radius: 8px; padding: 20px; border: 1px solid #d0d7de; margin-bottom: 20px; overflow-x: auto; }
+        #preview-content code { background-color: rgba(175, 184, 193, 0.2); padding: 0.2em 0.4em; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 90%; }
+        #preview-content ul { list-style-type: disc; padding-left: 2em; margin-bottom: 20px; }
+        #preview-content hr { height: 2px; background-color: #e1e4e8; border: 0; margin: 32px 0; }
+        
         .github-mode { background-color: #f6f8fa !important; padding: 2rem !important; }
-        .github-box { background: white; border: 1px solid #d0d7de; border-radius: 6px; max-width: 900px; margin: 0 auto; }
-        .github-header { background: #f6f8fa; border-bottom: 1px solid #d0d7de; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1f2328; border-radius: 6px 6px 0 0; }
+        .github-box { background: white; border: 1px solid #d0d7de; border-radius: 6px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .github-header { background: #f6f8fa; border-bottom: 1px solid #d0d7de; padding: 12px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #1f2328; border-radius: 6px 6px 0 0; }
     </style>
 </head>
 <body id="body-theme" class="bg-[#0d1117] text-gray-300 font-sans h-screen overflow-hidden flex flex-col">
@@ -124,7 +129,7 @@
             const btn = document.createElement('button');
             btn.className = "template-btn w-full text-left p-2 rounded text-sm transition flex items-center gap-2 mb-1 text-gray-300 hover:bg-gray-800";
             btn.innerHTML = `<span>${projectSpecifics[name].icon}</span> ${name}`;
-            btn.onclick = () => { editor.value = `${name}\nDescribe your project goal here...`; updatePreview(); };
+            btn.onclick = () => { editor.value = `${name}\nWrite a high-level summary of your project purpose here...`; updatePreview(); };
             templateList.appendChild(btn);
         });
 
@@ -135,15 +140,13 @@
             if (isDarkMode) {
                 bodyTheme.classList.replace('bg-gray-100', 'bg-[#0d1117]'); bodyTheme.classList.replace('text-gray-900', 'text-gray-300');
                 sidebar.classList.replace('bg-white', 'bg-[#0d1117]'); mainHeader.classList.replace('bg-white', 'bg-[#161b22]');
-                editorLabel.classList.replace('bg-gray-200', 'bg-[#161b22]');
-                editor.classList.replace('text-gray-800', 'text-gray-300');
+                editorLabel.classList.replace('bg-gray-200', 'bg-[#161b22]'); editor.classList.replace('text-gray-800', 'text-gray-300');
                 templateBtns.forEach(btn => { btn.classList.replace('text-gray-700', 'text-gray-300'); btn.classList.replace('hover:bg-gray-200', 'hover:bg-gray-800'); });
                 icon.innerText = "☀️";
             } else {
                 bodyTheme.classList.replace('bg-[#0d1117]', 'bg-gray-100'); bodyTheme.classList.replace('text-gray-300', 'text-gray-900');
                 sidebar.classList.replace('bg-[#0d1117]', 'bg-white'); mainHeader.classList.replace('bg-[#161b22]', 'bg-white');
-                editorLabel.classList.replace('bg-[#161b22]', 'bg-gray-200');
-                editor.classList.replace('text-gray-300', 'text-gray-800');
+                editorLabel.classList.replace('bg-[#161b22]', 'bg-gray-200'); editor.classList.replace('text-gray-300', 'text-gray-800');
                 templateBtns.forEach(btn => { btn.classList.replace('text-gray-300', 'text-gray-700'); btn.classList.replace('hover:bg-gray-800', 'hover:bg-gray-200'); });
                 icon.innerText = "🌙";
             }
@@ -161,12 +164,63 @@
         }
 
         function clearEditor() { if(confirm("Clear all text?")) { editor.value = ""; updatePreview(); } }
-        function updatePreview() { previewContent.innerHTML = marked.parse(editor.value || "*Preview will appear here...*"); document.getElementById('char-count').innerText = `${editor.value.length} chars`; }
+        function updatePreview() { previewContent.innerHTML = marked.parse(editor.value || "*Markdown preview will appear here...*"); document.getElementById('char-count').innerText = `${editor.value.length} chars`; }
         
+        // --- PROFESSIONALLY ORDERED GENERATOR ---
         function generateOffline() {
             const rawText = editor.value.trim(); if(!rawText) return alert("Select a template!");
-            const title = rawText.split('\n')[0]; const specs = projectSpecifics[title] || { stack: '- HTML/CSS', structure: 'index.html' };
-            editor.value = `# ${title}\n## 📖 Description\n${rawText.split('\n').slice(1).join(' ')}\n\n## 🚀 Tech Stack\n${specs.stack}\n\n## 📂 Folder Structure\n\`\`\`text\n${specs.structure}\n\`\`\`\n\n## ⚙️ Installation\n\`\`\`bash\nnpm install && npm start\n\`\`\``;
+            const lines = rawText.split('\n');
+            const title = lines[0] || "My Project";
+            const description = lines.slice(1).join(' ').trim() || "A high-performance application built with modern standards.";
+            const specs = projectSpecifics[title] || { stack: '- JavaScript\n- HTML/CSS', structure: 'src/\n└── index.html' };
+
+            editor.value = `# 🚀 ${title}
+
+## 📝 Project Overview
+${description}
+
+---
+
+## ✨ Core Features
+* **Scalability**: Designed to handle growth and high traffic.
+* **Responsive UI**: Optimized for mobile, tablet, and desktop views.
+* **Clean Architecture**: Follows the best design patterns for maintainability.
+* **Fast Performance**: Minimized load times and optimized assets.
+
+---
+
+## 🛠️ Technology Stack
+${specs.stack}
+
+---
+
+## 📂 Directory Structure
+\`\`\`text
+${specs.structure}
+\`\`\`
+
+---
+
+## ⚙️ Installation & Usage
+### 1. Repository Setup
+\`\`\`bash
+git clone https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}.git
+\`\`\`
+### 2. Dependency Management
+Install the required packages for the environment:
+\`\`\`bash
+npm install # or pip install -r requirements.txt
+\`\`\`
+### 3. Execution
+Launch the application:
+\`\`\`bash
+npm start # or python main.py
+\`\`\`
+
+---
+
+## 📄 License
+This project is distributed under the **MIT License**. See \`LICENSE\` for more information.`;
             updatePreview();
         }
 
@@ -183,22 +237,14 @@
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "README.md"; link.click();
         }
 
-        // UPDATED .DOCX DOWNLOAD LOGIC
         function downloadDocx() {
-            const content = editor.value.trim();
-            if (!content) return alert("No content to download!");
-            
+            const content = editor.value.trim(); if (!content) return alert("No content!");
             const htmlContent = marked.parse(content);
             const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
             const footer = "</body></html>";
-            
-            const blob = new Blob(['\ufeff', header + htmlContent + footer], { type: 'application/msword' });
+            const blob = new Blob(['\\ufeff', header + htmlContent + footer], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = "README.doc";
-            link.click();
-            URL.revokeObjectURL(url);
+            const link = document.createElement('a'); link.href = url; link.download = "README.doc"; link.click(); URL.revokeObjectURL(url);
         }
 
         updatePreview();

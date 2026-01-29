@@ -123,7 +123,7 @@
             const btn = document.createElement('button');
             btn.className = "template-btn w-full text-left p-2 rounded text-sm transition flex items-center gap-2 mb-1 text-gray-300 hover:bg-gray-800";
             btn.innerHTML = `<span>${projectSpecifics[name].icon}</span> ${name}`;
-            btn.onclick = () => { editor.value = `${name}\nDescribe the project vision and core goals here.`; updatePreview(); };
+            btn.onclick = () => { editor.value = `${name}\nBriefly describe the purpose of this project and the problem it solves.`; updatePreview(); };
             templateList.appendChild(btn);
         });
 
@@ -164,7 +164,7 @@
             const rawText = editor.value.trim(); if(!rawText) return alert("Select a template!");
             const lines = rawText.split('\n');
             const title = lines[0] || "My Project";
-            const description = lines.slice(1).join(' ').trim() || "A high-quality application built with modern standards.";
+            const description = lines.slice(1).join(' ').trim() || "A high-performance application built with modern standards.";
             const specs = projectSpecifics[title] || { stack: '- JavaScript\n- HTML/CSS', structure: 'src/\n└── index.html' };
 
             // Overwrites old content with new template
@@ -190,7 +190,7 @@
 ### Key Features
 * 🚀 **Performance**: Optimized load times.
 * 📱 **Responsive**: Supports all devices.
-* 🛠️ **Clean Code**: Follows best industry practices.
+* 🛡️ **Security**: Follows industry-standard protocols.
 
 ---
 

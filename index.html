@@ -12,7 +12,6 @@
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
         body { transition: background-color 0.3s, color 0.3s; }
         
-        /* High-End Markdown Styling */
         #preview-content h1 { border-bottom: 2px solid #30363d; padding-bottom: .5em; font-size: 2.25em; font-weight: 800; margin-top: 24px; margin-bottom: 20px; text-align: center; }
         #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 32px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
         #preview-content pre { background-color: #f6f8fa; border-radius: 8px; padding: 20px; border: 1px solid #d0d7de; margin-bottom: 20px; }
@@ -46,12 +45,17 @@
             <button onclick="generateOffline()" id="gen-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all shadow-lg active:scale-95">
                 ✨ Generate Perfect README
             </button>
-            <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
-                Download .docx
-            </button>
-            <button onclick="downloadReadme()" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
-                Download .md
-            </button>
+            <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">Download .docx</button>
+            <button onclick="downloadReadme()" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2 rounded-lg font-medium text-sm transition">Download .md</button>
+            
+            <div class="flex items-center gap-2 border-l border-[#30363d] pl-3 ml-1">
+                <button onclick="shareTwitter()" class="p-2 rounded-lg bg-[#1da1f2]/10 hover:bg-[#1da1f2]/20 text-[#1da1f2] border border-[#1da1f2]/30 transition" title="Share on Twitter">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                </button>
+                <button onclick="shareLinkedIn()" class="p-2 rounded-lg bg-[#0077b5]/10 hover:bg-[#0077b5]/20 text-[#0077b5] border border-[#0077b5]/30 transition" title="Share on LinkedIn">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -127,7 +131,7 @@
             const btn = document.createElement('button');
             btn.className = "template-btn w-full text-left p-2 rounded text-sm transition flex items-center gap-2 mb-1 text-gray-300 hover:bg-gray-800";
             btn.innerHTML = `<span>${projectSpecifics[name].icon}</span> ${name}`;
-            btn.onclick = () => { editor.value = `${name}\nProvide a comprehensive summary of the project goals, functionality, and unique selling points here.`; updatePreview(); };
+            btn.onclick = () => { editor.value = `${name}\nProvide a comprehensive summary of project goals here.`; updatePreview(); };
             templateList.appendChild(btn);
         });
 
@@ -164,72 +168,46 @@
         function clearEditor() { if(confirm("Clear all text?")) { editor.value = ""; updatePreview(); } }
         function updatePreview() { previewContent.innerHTML = marked.parse(editor.value || "*Markdown preview will appear here...*"); document.getElementById('char-count').innerText = `${editor.value.length} chars`; }
 
-        // --- THE "PERFECT" GITHUB GENERATOR ---
+        // --- THE "PERFECT" OVERWRITING GENERATOR ---
         function generateOffline() {
             const rawText = editor.value.trim(); if(!rawText) return alert("Select a template!");
             const lines = rawText.split('\n');
             const title = lines[0] || "My Project";
-            const description = lines.slice(1).join(' ').trim() || "A high-quality application built with modern standards.";
+            const description = lines.slice(1).join(' ').trim() || "A professional project built with modern standards.";
             const specs = projectSpecifics[title] || { stack: '- JavaScript\n- HTML/CSS', structure: 'src/\n└── index.html' };
 
+            // Overwrites old content with new template
             editor.value = `<div align="center">
   <img src="https://via.placeholder.com/150" alt="Project Logo" width="80" height="80">
   <h1 align="center">${title}</h1>
-
   <p align="center">
     <img src="https://img.shields.io/badge/Maintained-Yes-green.svg" alt="Maintenance">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
     <img src="https://img.shields.io/badge/Build-Passing-brightgreen.svg" alt="Build">
   </p>
-
-  <p align="center">
-    ${description}
-    <br />
-    <a href="#-getting-started"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}/issues">Request Feature</a>
-  </p>
+  <p align="center">${description}</p>
 </div>
 
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#-about-the-project">About The Project</a></li>
-    <li><a href="#-tech-stack">Tech Stack</a></li>
-    <li><a href="#-getting-started">Getting Started</a></li>
-    <li><a href="#-folder-structure">Folder Structure</a></li>
-    <li><a href="#-roadmap">Roadmap</a></li>
-    <li><a href="#-contributing">Contributing</a></li>
-    <li><a href="#-license">License</a></li>
-  </ol>
-</details>
+<details><summary>Table of Contents</summary><ol><li><a href="#-about">About</a></li><li><a href="#-tech-stack">Tech Stack</a></li><li><a href="#-setup">Setup</a></li></ol></details>
 
 ---
 
 ## 🧐 About The Project
-
 > [!IMPORTANT]  
-> Provide a brief mission statement of why this project exists and what primary problem it solves for the user.
+> Brief project mission statement.
 
 ### Key Features
-* 🚀 **Instant Performance**: Optimized for fast load times.
-* 🛡️ **Secure by Design**: Follows industry-standard security protocols.
-* 📱 **Fully Responsive**: Adapts seamlessly to all device screen sizes.
-* 🎨 **Clean Codebase**: Adheres to modern design patterns for maintainability.
+* 🚀 **Performance**: Optimized load times.
+* 📱 **Responsive**: Supports all devices.
 
 ---
 
 ## 🛠️ Tech Stack
-
 ${specs.stack}
 
 ---
 
 ## 📂 Folder Structure
-
 \`\`\`text
 ${specs.structure}
 \`\`\`
@@ -237,44 +215,28 @@ ${specs.structure}
 ---
 
 ## 🏁 Getting Started
-
-### Prerequisites
-* npm
-  \`\`\`bash
-  npm install npm@latest -g
-  \`\`\`
-
 ### Installation
-1. Clone the repo
-   \`\`\`bash
-   git clone https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}.git
-   \`\`\`
-2. Install NPM packages
-   \`\`\`bash
-   npm install
-   \`\`\`
-3. Create local environment
-   \`\`\`bash
-   cp .env.example .env
-   \`\`\`
-
----
-
-## 🗺️ Roadmap
-- [x] Initial MVP Release
-- [ ] Multi-language Support
-- [ ] Integrated API Dashboard
-- [ ] Mobile App Port
+1. Clone the repo: \`git clone https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}.git\`
+2. Install dependencies: \`npm install\`
 
 ---
 
 ## 📄 License
-Distributed under the **MIT License**. See \`LICENSE\` for more information.
-
----
+Distributed under the **MIT License**.
 
 <p align="center">Made with ❤️ by <a href="https://github.com/yourusername">Your Name</a></p>`;
             updatePreview();
+        }
+
+        // --- SOCIAL SHARE LOGIC ---
+        function shareTwitter() {
+            const title = editor.value.split('\n')[1] || "My Project"; // Extract title from generated H1
+            const text = `Check out my new project README: ${title}`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        }
+
+        function shareLinkedIn() {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
         }
 
         function toggleEditMode() {
@@ -285,20 +247,17 @@ Distributed under the **MIT License**. See \`LICENSE\` for more information.
 
         function syncFromEdit() { editor.value = resultEditor.value; updatePreview(); }
         function copyToClipboard() { navigator.clipboard.writeText(editor.value); alert("Copied!"); }
-        
         function downloadReadme() {
             const blob = new Blob([editor.value], { type: 'text/markdown' });
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "README.md"; link.click();
         }
-
         function downloadDocx() {
             const content = editor.value.trim(); if (!content) return alert("No content!");
             const htmlContent = marked.parse(content);
             const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
             const footer = "</body></html>";
             const blob = new Blob(['\\ufeff', header + htmlContent + footer], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a'); link.href = url; link.download = "README.doc"; link.click(); URL.revokeObjectURL(url);
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "README.doc"; link.click();
         }
 
         updatePreview();

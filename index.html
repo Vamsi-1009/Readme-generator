@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>README Pro - Advanced Offline Generator</title>
+    <title>README Pro - Perfect GitHub Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
@@ -12,16 +12,14 @@
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
         body { transition: background-color 0.3s, color 0.3s; }
         
-        /* Professional Markdown Styling */
-        #preview-content h1 { border-bottom: 2px solid #30363d; padding-bottom: .5em; font-size: 2.25em; font-weight: 800; margin-top: 24px; margin-bottom: 20px; }
-        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
-        #preview-content pre { background-color: #f6f8fa; border-radius: 8px; padding: 20px; border: 1px solid #d0d7de; margin-bottom: 20px; overflow-x: auto; }
-        #preview-content code { background-color: rgba(175, 184, 193, 0.2); padding: 0.2em 0.4em; border-radius: 4px; font-family: ui-monospace, monospace; font-size: 90%; }
-        #preview-content ul { list-style-type: disc; padding-left: 2em; margin-bottom: 20px; }
-        #preview-content hr { height: 2px; background-color: #e1e4e8; border: 0; margin: 32px 0; }
+        /* High-End Markdown Styling */
+        #preview-content h1 { border-bottom: 2px solid #30363d; padding-bottom: .5em; font-size: 2.25em; font-weight: 800; margin-top: 24px; margin-bottom: 20px; text-align: center; }
+        #preview-content h2 { border-bottom: 1px solid #d0d7de; padding-bottom: .3em; font-size: 1.5em; font-weight: 600; margin-top: 32px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        #preview-content pre { background-color: #f6f8fa; border-radius: 8px; padding: 20px; border: 1px solid #d0d7de; margin-bottom: 20px; }
+        #preview-content blockquote { border-left: 0.25em solid #d0d7de; padding: 0 1em; color: #656d76; }
         
         .github-mode { background-color: #f6f8fa !important; padding: 2rem !important; }
-        .github-box { background: white; border: 1px solid #d0d7de; border-radius: 6px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .github-box { background: white; border: 1px solid #d0d7de; border-radius: 6px; max-width: 900px; margin: 0 auto; box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
         .github-header { background: #f6f8fa; border-bottom: 1px solid #d0d7de; padding: 12px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #1f2328; border-radius: 6px 6px 0 0; }
     </style>
 </head>
@@ -46,7 +44,7 @@
                 Copy Code
             </button>
             <button onclick="generateOffline()" id="gen-btn" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold text-sm transition-all shadow-lg active:scale-95">
-                ✨ Generate Instant README
+                ✨ Generate Perfect README
             </button>
             <button onclick="downloadDocx()" class="bg-blue-700 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-medium text-sm transition">
                 Download .docx
@@ -77,7 +75,7 @@
             <div class="bg-gray-100 px-4 py-2 text-[10px] font-bold text-gray-500 uppercase flex justify-between items-center border-b">
                 <div class="flex gap-2">
                     <button id="toggle-edit-btn" onclick="toggleEditMode()" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-md transition hover:bg-blue-200">Edit</button>
-                    <button id="github-view-btn" onclick="toggleGitHubMode()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md transition hover:bg-gray-300">👁️ GitHub View</button>
+                    <button id="github-view-btn" onclick="toggleGitHubMode()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md transition hover:bg-gray-300">👁️ GitHub Preview</button>
                 </div>
                 <span>Live Rendering</span>
             </div>
@@ -129,7 +127,7 @@
             const btn = document.createElement('button');
             btn.className = "template-btn w-full text-left p-2 rounded text-sm transition flex items-center gap-2 mb-1 text-gray-300 hover:bg-gray-800";
             btn.innerHTML = `<span>${projectSpecifics[name].icon}</span> ${name}`;
-            btn.onclick = () => { editor.value = `${name}\nWrite a high-level summary of your project purpose here...`; updatePreview(); };
+            btn.onclick = () => { editor.value = `${name}\nProvide a comprehensive summary of the project goals, functionality, and unique selling points here.`; updatePreview(); };
             templateList.appendChild(btn);
         });
 
@@ -159,68 +157,123 @@
                 document.getElementById('github-view-btn').innerText = "✖️ Exit View";
             } else {
                 previewContainer.classList.remove('github-mode'); githubWrapper.classList.remove('github-box'); githubHeader.classList.add('hidden');
-                document.getElementById('github-view-btn').innerText = "👁️ GitHub View";
+                document.getElementById('github-view-btn').innerText = "👁️ GitHub Preview";
             }
         }
 
         function clearEditor() { if(confirm("Clear all text?")) { editor.value = ""; updatePreview(); } }
         function updatePreview() { previewContent.innerHTML = marked.parse(editor.value || "*Markdown preview will appear here...*"); document.getElementById('char-count').innerText = `${editor.value.length} chars`; }
-        
-        // --- PROFESSIONALLY ORDERED GENERATOR ---
+
+        // --- THE "PERFECT" GITHUB GENERATOR ---
         function generateOffline() {
             const rawText = editor.value.trim(); if(!rawText) return alert("Select a template!");
             const lines = rawText.split('\n');
             const title = lines[0] || "My Project";
-            const description = lines.slice(1).join(' ').trim() || "A high-performance application built with modern standards.";
+            const description = lines.slice(1).join(' ').trim() || "A high-quality application built with modern standards.";
             const specs = projectSpecifics[title] || { stack: '- JavaScript\n- HTML/CSS', structure: 'src/\n└── index.html' };
 
-            editor.value = `# 🚀 ${title}
+            editor.value = `<div align="center">
+  <img src="https://via.placeholder.com/150" alt="Project Logo" width="80" height="80">
+  <h1 align="center">${title}</h1>
 
-## 📝 Project Overview
-${description}
+  <p align="center">
+    <img src="https://img.shields.io/badge/Maintained-Yes-green.svg" alt="Maintenance">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+    <img src="https://img.shields.io/badge/Build-Passing-brightgreen.svg" alt="Build">
+  </p>
+
+  <p align="center">
+    ${description}
+    <br />
+    <a href="#-getting-started"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}/issues">Request Feature</a>
+  </p>
+</div>
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#-about-the-project">About The Project</a></li>
+    <li><a href="#-tech-stack">Tech Stack</a></li>
+    <li><a href="#-getting-started">Getting Started</a></li>
+    <li><a href="#-folder-structure">Folder Structure</a></li>
+    <li><a href="#-roadmap">Roadmap</a></li>
+    <li><a href="#-contributing">Contributing</a></li>
+    <li><a href="#-license">License</a></li>
+  </ol>
+</details>
 
 ---
 
-## ✨ Core Features
-* **Scalability**: Designed to handle growth and high traffic.
-* **Responsive UI**: Optimized for mobile, tablet, and desktop views.
-* **Clean Architecture**: Follows the best design patterns for maintainability.
-* **Fast Performance**: Minimized load times and optimized assets.
+## 🧐 About The Project
+
+> [!IMPORTANT]  
+> Provide a brief mission statement of why this project exists and what primary problem it solves for the user.
+
+### Key Features
+* 🚀 **Instant Performance**: Optimized for fast load times.
+* 🛡️ **Secure by Design**: Follows industry-standard security protocols.
+* 📱 **Fully Responsive**: Adapts seamlessly to all device screen sizes.
+* 🎨 **Clean Codebase**: Adheres to modern design patterns for maintainability.
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
+
 ${specs.stack}
 
 ---
 
-## 📂 Directory Structure
+## 📂 Folder Structure
+
 \`\`\`text
 ${specs.structure}
 \`\`\`
 
 ---
 
-## ⚙️ Installation & Usage
-### 1. Repository Setup
-\`\`\`bash
-git clone https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}.git
-\`\`\`
-### 2. Dependency Management
-Install the required packages for the environment:
-\`\`\`bash
-npm install # or pip install -r requirements.txt
-\`\`\`
-### 3. Execution
-Launch the application:
-\`\`\`bash
-npm start # or python main.py
-\`\`\`
+## 🏁 Getting Started
+
+### Prerequisites
+* npm
+  \`\`\`bash
+  npm install npm@latest -g
+  \`\`\`
+
+### Installation
+1. Clone the repo
+   \`\`\`bash
+   git clone https://github.com/yourusername/${title.toLowerCase().replace(/\\s+/g, '-')}.git
+   \`\`\`
+2. Install NPM packages
+   \`\`\`bash
+   npm install
+   \`\`\`
+3. Create local environment
+   \`\`\`bash
+   cp .env.example .env
+   \`\`\`
+
+---
+
+## 🗺️ Roadmap
+- [x] Initial MVP Release
+- [ ] Multi-language Support
+- [ ] Integrated API Dashboard
+- [ ] Mobile App Port
 
 ---
 
 ## 📄 License
-This project is distributed under the **MIT License**. See \`LICENSE\` for more information.`;
+Distributed under the **MIT License**. See \`LICENSE\` for more information.
+
+---
+
+<p align="center">Made with ❤️ by <a href="https://github.com/yourusername">Your Name</a></p>`;
             updatePreview();
         }
 
@@ -232,6 +285,7 @@ This project is distributed under the **MIT License**. See \`LICENSE\` for more 
 
         function syncFromEdit() { editor.value = resultEditor.value; updatePreview(); }
         function copyToClipboard() { navigator.clipboard.writeText(editor.value); alert("Copied!"); }
+        
         function downloadReadme() {
             const blob = new Blob([editor.value], { type: 'text/markdown' });
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = "README.md"; link.click();

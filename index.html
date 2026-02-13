@@ -131,17 +131,42 @@
             isDarkMode = !isDarkMode;
             const icon = document.getElementById('theme-icon');
             const templateBtns = document.querySelectorAll('.template-btn');
+            // Target the Clear All button specifically
+            const clearBtn = document.querySelector('button[onclick="clearEditor()"]'); 
+        
             if (isDarkMode) {
-                bodyTheme.classList.replace('bg-gray-100', 'bg-[#0d1117]'); bodyTheme.classList.replace('text-gray-900', 'text-gray-300');
-                sidebar.classList.replace('bg-white', 'bg-[#0d1117]'); mainHeader.classList.replace('bg-white', 'bg-[#161b22]');
-                editorLabel.classList.replace('bg-gray-200', 'bg-[#161b22]'); editor.classList.replace('text-gray-800', 'text-gray-300');
-                templateBtns.forEach(btn => { btn.classList.replace('text-gray-700', 'text-gray-300'); btn.classList.replace('hover:bg-gray-200', 'hover:bg-gray-800'); });
+                bodyTheme.classList.replace('bg-gray-100', 'bg-[#0d1117]');
+                bodyTheme.classList.replace('text-gray-900', 'text-gray-300');
+                sidebar.classList.replace('bg-white', 'bg-[#0d1117]');
+                mainHeader.classList.replace('bg-white', 'bg-[#161b22]');
+                editorLabel.classList.replace('bg-gray-200', 'bg-[#161b22]');
+                editor.classList.replace('text-gray-800', 'text-gray-300');
+                
+                // Fix: Make Clear All dark again
+                clearBtn.classList.replace('bg-red-200', 'bg-red-900/30');
+                clearBtn.classList.replace('text-red-800', 'text-red-200');
+        
+                templateBtns.forEach(btn => {
+                    btn.classList.replace('text-gray-700', 'text-gray-300');
+                    btn.classList.replace('hover:bg-gray-200', 'hover:bg-gray-800');
+                });
                 icon.innerText = "☀️";
             } else {
-                bodyTheme.classList.replace('bg-[#0d1117]', 'bg-gray-100'); bodyTheme.classList.replace('text-gray-300', 'text-gray-900');
-                sidebar.classList.replace('bg-[#0d1117]', 'bg-white'); mainHeader.classList.replace('bg-[#161b22]', 'bg-white');
-                editorLabel.classList.replace('bg-[#161b22]', 'bg-gray-200'); editor.classList.replace('text-gray-300', 'text-gray-800');
-                templateBtns.forEach(btn => { btn.classList.replace('text-gray-300', 'text-gray-700'); btn.classList.replace('hover:bg-gray-800', 'hover:bg-gray-200'); });
+                bodyTheme.classList.replace('bg-[#0d1117]', 'bg-gray-100');
+                bodyTheme.classList.replace('text-gray-300', 'text-gray-900');
+                sidebar.classList.replace('bg-[#0d1117]', 'bg-white');
+                mainHeader.classList.replace('bg-[#161b22]', 'bg-white');
+                editorLabel.classList.replace('bg-[#161b22]', 'bg-gray-200');
+                editor.classList.replace('text-gray-300', 'text-gray-800');
+        
+                // Fix: Make Clear All visible in light mode
+                clearBtn.classList.replace('bg-red-900/30', 'bg-red-200');
+                clearBtn.classList.replace('text-red-200', 'text-red-800');
+        
+                templateBtns.forEach(btn => {
+                    btn.classList.replace('text-gray-300', 'text-gray-700');
+                    btn.classList.replace('hover:bg-gray-800', 'hover:bg-gray-200');
+                });
                 icon.innerText = "🌙";
             }
         }
